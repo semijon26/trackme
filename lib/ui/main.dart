@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Personal Tracking App',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        primarySwatch: Colors.brown,
       ),
       home: FutureBuilder(
         future: Hive.openBox('tracks'),
@@ -115,54 +116,66 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Container(
-            color: Color(Colors.black38.value),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(recorder.latitude.toString()),
-                  Text('Latitude'),
-                  Text(''),
-                  Text(recorder.longitude.toString()),
-                  Text('Longitude'),
-                ],
+          SizedBox(
+            height: 180,
+            width: 300,
+            child: Card(
+              margin: const EdgeInsets.only(bottom: 30),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(_isRecording ? recorder.latitude.toString() : '--'),
+                    const Text('Latitude'),
+                    Text(''),
+                    Text(_isRecording ? recorder.longitude.toString() : '--'),
+                    const Text('Longitude'),
+                  ],
+                ),
               ),
             ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                color: Color(Colors.black26.value),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(recorder.timestamp.toString()),
-                      const Text('Time'),
-                    ],
+              SizedBox(
+                height: 120,
+                width: 150,
+                child: Card(
+                  margin: const EdgeInsets.only(right: 15, bottom: 30),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                    Text(_isRecording ? 'z.B. 00:03:26' : '--'),
+                        const Text('Recording Time'),
+                      ],
+                    ),
                   ),
                 ),
               ),
-              Container(
-                color: Color(Colors.black12.value),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(formatAndCheckSpeedValue(recorder.speed)),
-                      const Text('Speed'),
-                    ],
+              SizedBox(
+                height: 120,
+                width: 150,
+                child: Card(
+                  margin: const EdgeInsets.only(left: 15, bottom: 30),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(_isRecording ? formatAndCheckSpeedValue(recorder.speed) : '--'),
+                        const Text('Speed'),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               fixedSize: Size(300, 150),
-
+              primary: _getStartStopButtonColor(),
             ),
             onPressed: _switchRecordingStatus,
             child: _getStartStopButtonIcon(),
@@ -172,12 +185,20 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  Color _getStartStopButtonColor() {
+    if (_isRecording) {
+      return Colors.red;
+    }
+    return Colors.green;
+  }
+
   Icon _getStartStopButtonIcon() {
     if (_isRecording) {
-      return const Icon(Icons.stop);
+      return const Icon(Icons.stop, color: Colors.white, size: 100);
     }
-    return const Icon(Icons.play_arrow);
+    return const Icon(Icons.play_arrow, color: Colors.white, size: 100);
   }
+
 
   Widget buildListView(BuildContext context) {
     return WatchBoxBuilder(
@@ -245,8 +266,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const Text('Max. Speed: ',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
-                              Text(formatAndCheckSpeedValue(track.maxSpeed()) +
-                                  ' km/h'),
+                              Text(formatAndCheckSpeedValue(track.maxSpeed())),
                             ],
                           ),
                           Column(
@@ -254,8 +274,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const Text('Avg. Speed: ',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
-                              Text(formatAndCheckSpeedValue(track.avgSpeed()) +
-                                  ' km/h'),
+                              Text(formatAndCheckSpeedValue(track.avgSpeed())),
                             ],
                           ),
                         ],
@@ -273,16 +292,15 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  String formatAndCheckSpeedValue(double value) {
-    value = value * 3.6;
+  String formatAndCheckSpeedValue(double speedInMetersPerSec) {
+    speedInMetersPerSec = speedInMetersPerSec * 3.6;
     String s = "";
-    if (value.isNaN || value.isInfinite) {
-      s = "unknown";
+    if (speedInMetersPerSec.isNaN || speedInMetersPerSec.isInfinite) {
+      return "unknown";
     } else {
       num mod = pow(10.0, 2);
-      s = ((value * mod).round().toDouble() / mod).toString();
+      s = ((speedInMetersPerSec * mod).round().toDouble() / mod).toString();
     }
-    return s;
+    return '$s km/h';
   }
-
 }
