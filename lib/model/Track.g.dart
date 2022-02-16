@@ -18,7 +18,8 @@ class TrackAdapter extends TypeAdapter<Track> {
     };
     return Track()
       .._startTime = fields[0] as DateTime?
-      .._endTime = fields[1] as DateTime?;
+      .._endTime = fields[1] as DateTime?
+      .._positions = (fields[2] as List).cast<GeoPosition>();
   }
 
   @override

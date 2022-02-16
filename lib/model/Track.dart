@@ -1,12 +1,11 @@
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'GeoPosition.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 part 'Track.g.dart';
 
 @HiveType(typeId: 1)
 class Track extends HiveObject {
-
   @HiveField(0)
   DateTime? _startTime;
 
@@ -14,10 +13,10 @@ class Track extends HiveObject {
   DateTime? _endTime;
 
   @HiveField(2)
-  final _positions = <GeoPosition> [];
+  // ignore: prefer_final_fields
+  var _positions = <GeoPosition>[];
 
-
-  void addPosition (GeoPosition position) {
+  void addPosition(GeoPosition position) {
     _positions.add(position);
   }
 
@@ -32,7 +31,7 @@ class Track extends HiveObject {
         avg = avg + pos.speed!;
       }
     }
-    avg = avg/_positions.length;
+    avg = avg / _positions.length;
     return avg;
   }
 
