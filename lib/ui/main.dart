@@ -16,6 +16,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 Recorder recorder = Recorder();
 DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
 DateFormat timeFormatter = DateFormat('h:mm a');
+DateTime? _startButtonTimestamp;
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -67,12 +68,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late Timer _timer;
   bool _isRecording = recorder.isRecording;
+  var timestamp = ValueNotifier(recorder.timestamp);
 
   void _switchRecordingStatus() {
     setState(() {
       if (!_isRecording) {
         // nimmt noch nicht auf -> starte
+        _startButtonTimestamp = DateTime.now();
         recorder.startRecording();
         _isRecording = recorder.isRecording;
       } else {
@@ -83,16 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _refreshData() {
-    Timer.periodic(const Duration(milliseconds: 100), (Timer t) {
-      setState(() {});
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    //_refreshData();  -------------NOTWENDIG UM INFOS STÄNDIG ZU AKTUALISIEREN, aber verursacht Performance Verlust---------
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -113,74 +109,86 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Center buildMainPage() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            height: 180,
-            width: 300,
-            child: Card(
-              margin: const EdgeInsets.only(bottom: 30),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(_isRecording ? recorder.latitude.toString() : '--'),
-                    const Text('Latitude'),
-                    Text(''),
-                    Text(_isRecording ? recorder.longitude.toString() : '--'),
-                    const Text('Longitude'),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Row(
+      child: ValueListenableBuilder(
+        valueListenable: timestamp,
+        builder: (context, n, c) {
+          return Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               SizedBox(
-                height: 120,
-                width: 150,
+                height: 180,
+                width: 300,
                 child: Card(
-                  margin: const EdgeInsets.only(right: 15, bottom: 30),
+                  margin: const EdgeInsets.only(bottom: 30),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                    Text(_isRecording ? 'z.B. 00:03:26' : '--'),
-                        const Text('Recording Time'),
+                        Text(_isRecording ? recorder.latitude.toString() : '--',
+                          style: const TextStyle(fontSize: 24, color: Colors.brown),),
+                        const Text('Latitude'),
+                        Text(''),
+                        Text(_isRecording ? recorder.longitude.toString() : '--',
+                          style: const TextStyle(fontSize: 24, color: Colors.brown),),
+                        const Text('Longitude'),
                       ],
                     ),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 120,
-                width: 150,
-                child: Card(
-                  margin: const EdgeInsets.only(left: 15, bottom: 30),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(_isRecording ? formatAndCheckSpeedValue(recorder.speed) : '--'),
-                        const Text('Speed'),
-                      ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 120,
+                    width: 150,
+                    child: Card(
+                      margin: const EdgeInsets.only(right: 15, bottom: 30),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(_isRecording ? _getRecordingDuration() : '--',
+                              style: const TextStyle(fontSize: 24, color: Colors.brown),),
+                            const Text('Recording Time'),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
+                  SizedBox(
+                    height: 120,
+                    width: 150,
+                    child: Card(
+                      margin: const EdgeInsets.only(left: 15, bottom: 30),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(_isRecording
+                                ? formatAndCheckSpeedValue(recorder.speed)
+                                : '--',
+                              style: const TextStyle(fontSize: 24, color: Colors.brown),
+                            ),
+                            const Text('Speed'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  fixedSize: Size(300, 150),
+                  primary: _getStartStopButtonColor(),
                 ),
-              )
+                onPressed: _switchRecordingStatus,
+                child: _getStartStopButtonIcon(),
+              ),
             ],
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              fixedSize: Size(300, 150),
-              primary: _getStartStopButtonColor(),
-            ),
-            onPressed: _switchRecordingStatus,
-            child: _getStartStopButtonIcon(),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -199,7 +207,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return const Icon(Icons.play_arrow, color: Colors.white, size: 100);
   }
 
-
   Widget buildListView(BuildContext context) {
     return WatchBoxBuilder(
         box: Hive.box('tracks'),
@@ -214,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     closeOnScroll: true,
                     dragStartBehavior: DragStartBehavior.start,
                     endActionPane: ActionPane(
-                      extentRatio: .3,
+                      extentRatio: .35,
                       motion: const DrawerMotion(),
                       children: [
                         SlidableAction(
@@ -303,4 +310,27 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return '$s km/h';
   }
+
+  String _getRecordingDuration() {
+    Duration d = DateTime.now().difference(_startButtonTimestamp!);
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(d.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(d.inSeconds.remainder(60));
+    return "${twoDigits(d.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  @override
+  void initState() {
+    _timer = new Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
 }
