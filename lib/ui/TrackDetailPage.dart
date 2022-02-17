@@ -24,10 +24,134 @@ class TrackDetailPage extends StatelessWidget {
       ),
       body: Center(
           child: Column(
-        children: [
-          Text(track.startTime.toString()),
-        ],
-      )),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 90,
+                    width: 170,
+                    child: Card(
+                      margin: const EdgeInsets.only(top: 15, right: 7),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text((track.totalDistance() != -1 ? track.totalDistance().toString() + "m" : 'unknown'),
+                              style: const TextStyle(
+                                  fontSize: 20, color: Colors.brown),),
+                            const Text('Distance'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 90,
+                    width: 170,
+                    child: Card(
+                      margin: const EdgeInsets.only(top: 15, left: 7),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text((track.startTime != null ? dateFormatter.format(track.startTime!.toLocal()) : 'unknown'),
+                              style: const TextStyle(
+                                  fontSize: 20, color: Colors.brown),),
+                            const Text('Duration'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 90,
+                    width: 170,
+                    child: Card(
+                      margin: const EdgeInsets.only(top: 15, right: 7),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text((track.startTime != null ? dateFormatter.format(track.startTime!.toLocal()) : 'unknown'),
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.brown),),
+                            const Text('Start Time'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 90,
+                    width: 170,
+                    child: Card(
+                      margin: const EdgeInsets.only(top: 15, left: 7),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text((track.startTime != null ? dateFormatter.format(track.startTime!.toLocal()) : 'unknown'),
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.brown),),
+                            const Text('End Time'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 90,
+                    width: 170,
+                    child: Card(
+                      margin: const EdgeInsets.only(top: 15, right: 7),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text((track.startTime != null ? dateFormatter.format(track.startTime!.toLocal()) : 'unknown'),
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.brown),),
+                            const Text('Max Speed'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 90,
+                    width: 170,
+                    child: Card(
+                      margin: const EdgeInsets.only(top: 15, left: 7),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text((track.startTime != null ? dateFormatter.format(track.startTime!.toLocal()) : 'unknown'),
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.brown),),
+                            const Text('Avg Speed'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          )
+      ),
     );
   }
 

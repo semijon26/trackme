@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:personal_tracking_app/model/GeoPosition.dart';
@@ -15,6 +18,8 @@ class Recorder {
 
   Future<void> _updatePosition(Track track) async {
     while(_isRecording) {
+      //Timer.periodic(const Duration(milliseconds: 1000), (Timer timer) { // kann man mit Timer vllt was anfangen?
+      //});
       Position pos = await _determinePosition();
       _latitude = pos.latitude;
       _longitude = pos.longitude;
@@ -26,6 +31,8 @@ class Recorder {
       GeoPosition newPos = GeoPosition.fromPosition(_latitude, _longitude, _speed, _timestamp);
       track.positions.add(newPos);
     }
+
+
     track.endTime = _timestamp;
     track.save();
     print("Number of Positions: ${track.positions.length}");

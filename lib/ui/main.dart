@@ -148,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(_isRecording ? _getRecordingDuration() : '--',
+                            Text(_isRecording ? _getRecordingTime() : '--',
                               style: const TextStyle(fontSize: 24, color: Colors.brown),),
                             const Text('Recording Time'),
                           ],
@@ -310,7 +310,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return '$s km/h';
   }
 
-  String _getRecordingDuration() {
+  String _getRecordingTime() {
     Duration d = DateTime.now().difference(_startButtonTimestamp!);
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(d.inMinutes.remainder(60));
