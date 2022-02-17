@@ -31,6 +31,9 @@ class TrackDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.share))
+        ],
         title: Text(
           'Track from ' +
               (track.startTime != null
