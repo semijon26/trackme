@@ -216,7 +216,6 @@ class _MyHomePageState extends State<MyHomePage> {
             itemBuilder: (context, index) {
               final track = tracksBox.getAt(index) as Track;
               return Card(
-                  elevation: 5,
                   child: Slidable(
                     closeOnScroll: true,
                     dragStartBehavior: DragStartBehavior.start,

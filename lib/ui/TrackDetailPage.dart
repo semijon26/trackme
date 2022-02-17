@@ -25,8 +25,7 @@ class TrackDetailPage extends StatelessWidget {
       body: Center(
           child: Column(
         children: [
-          Text("Track information ..."),
-
+          Text(track.startTime.toString()),
         ],
       )),
     );
