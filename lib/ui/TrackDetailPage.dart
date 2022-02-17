@@ -1,6 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:personal_tracking_app/ui/main.dart';
 
 import '../model/Track.dart';
 
@@ -10,6 +12,20 @@ class TrackDetailPage extends StatelessWidget {
   final Track track;
 
   TrackDetailPage(this.track, {Key? key}) : super(key: key);
+
+  String? getDuration (Track track) {
+    DateTime? dtStart = track.startTime;
+    DateTime? dtEnd = track.endTime;
+    Duration duration;
+    if (dtStart == null || dtEnd == null) {
+      return null;
+    }
+    duration = dtEnd.difference(dtStart);
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +72,7 @@ class TrackDetailPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text((track.startTime != null ? dateFormatter.format(track.startTime!.toLocal()) : 'unknown'),
+                            Text((getDuration(track) != null ? getDuration(track)! : 'unknown'),
                               style: const TextStyle(
                                   fontSize: 20, color: Colors.brown),),
                             const Text('Duration'),
@@ -79,7 +95,7 @@ class TrackDetailPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text((track.startTime != null ? dateFormatter.format(track.startTime!.toLocal()) : 'unknown'),
+                            Text((track.startTime != null ? timeFormatter.format(track.startTime!.toLocal()) : 'unknown'),
                               style: const TextStyle(
                                   fontSize: 14, color: Colors.brown),),
                             const Text('Start Time'),
@@ -97,7 +113,7 @@ class TrackDetailPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text((track.startTime != null ? dateFormatter.format(track.startTime!.toLocal()) : 'unknown'),
+                            Text((track.startTime != null ? timeFormatter.format(track.endTime!.toLocal()) : 'unknown'),
                               style: const TextStyle(
                                   fontSize: 14, color: Colors.brown),),
                             const Text('End Time'),
@@ -120,7 +136,7 @@ class TrackDetailPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text((track.startTime != null ? dateFormatter.format(track.startTime!.toLocal()) : 'unknown'),
+                            Text(_formatAndCheckSpeedValue(track.maxSpeed()),
                               style: const TextStyle(
                                   fontSize: 14, color: Colors.brown),),
                             const Text('Max Speed'),
@@ -138,7 +154,7 @@ class TrackDetailPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text((track.startTime != null ? dateFormatter.format(track.startTime!.toLocal()) : 'unknown'),
+                            Text(_formatAndCheckSpeedValue(track.avgSpeed()),
                               style: const TextStyle(
                                   fontSize: 14, color: Colors.brown),),
                             const Text('Avg Speed'),
@@ -155,7 +171,16 @@ class TrackDetailPage extends StatelessWidget {
     );
   }
 
-  void _openMap() {
-    // TODO (Map öffnen / Mehr Infos zur Route)
+  String _formatAndCheckSpeedValue(double speedInMetersPerSec) {
+    speedInMetersPerSec = speedInMetersPerSec * 3.6;
+    String s = "";
+    if (speedInMetersPerSec.isNaN || speedInMetersPerSec.isInfinite) {
+      return "unknown";
+    } else {
+      num mod = pow(10.0, 2);
+      s = ((speedInMetersPerSec * mod).round().toDouble() / mod).toString();
+    }
+    return '$s km/h';
   }
+
 }

@@ -13,7 +13,7 @@ import 'package:personal_tracking_app/model/Track.dart';
 import 'dart:math';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-Recorder recorder = Recorder();
+Recorder recorder = Recorder(); // listener mit reingeben
 DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
 DateFormat timeFormatter = DateFormat('h:mm a');
 DateTime? _startButtonTimestamp;
@@ -166,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(_isRecording
-                                ? formatAndCheckSpeedValue(recorder.speed)
+                                ? _formatAndCheckSpeedValue(recorder.speed)
                                 : '--',
                               style: const TextStyle(fontSize: 24, color: Colors.brown),
                             ),
@@ -272,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const Text('Max. Speed: ',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
-                              Text(formatAndCheckSpeedValue(track.maxSpeed())),
+                              Text(_formatAndCheckSpeedValue(track.maxSpeed())),
                             ],
                           ),
                           Column(
@@ -280,7 +280,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const Text('Avg. Speed: ',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
-                              Text(formatAndCheckSpeedValue(track.avgSpeed())),
+                              Text(_formatAndCheckSpeedValue(track.avgSpeed())),
                             ],
                           ),
                         ],
@@ -298,7 +298,7 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  String formatAndCheckSpeedValue(double speedInMetersPerSec) {
+  String _formatAndCheckSpeedValue(double speedInMetersPerSec) {
     speedInMetersPerSec = speedInMetersPerSec * 3.6;
     String s = "";
     if (speedInMetersPerSec.isNaN || speedInMetersPerSec.isInfinite) {

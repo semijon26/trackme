@@ -18,8 +18,6 @@ class Recorder {
 
   Future<void> _updatePosition(Track track) async {
     while(_isRecording) {
-      //Timer.periodic(const Duration(milliseconds: 1000), (Timer timer) { // kann man mit Timer vllt was anfangen?
-      //});
       Position pos = await _determinePosition();
       _latitude = pos.latitude;
       _longitude = pos.longitude;
@@ -30,19 +28,14 @@ class Recorder {
       track.startTime ??= _timestamp;
       GeoPosition newPos = GeoPosition.fromPosition(_latitude, _longitude, _speed, _timestamp);
       track.positions.add(newPos);
+      await Future.delayed(const Duration(milliseconds: 500));
     }
-
 
     track.endTime = _timestamp;
     track.save();
-    print("Number of Positions: ${track.positions.length}");
-
-    for (int i = 0; i < Hive.box('tracks').length; i++) {
-      Track t = Hive.box('tracks').getAt(i);
-      print('Track Nr. $i $t');
-      print("Number of Pos in DB: ${t.positions.length}");
-    }
+    // zwischenspeichern
   }
+
 
   void startRecording() {
     _isRecording = true;
