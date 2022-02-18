@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -327,7 +326,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    _timer = Timer.periodic(const Duration(milliseconds: 200), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {});
     });
     super.initState();

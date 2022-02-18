@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:personal_tracking_app/model/GeoPosition.dart';
@@ -22,7 +21,10 @@ class Recorder {
     distanceFilter: 5,
   );
 
-  //ValueNotifier _notifier = ValueNotifier(_timestamp);
+
+  Recorder () {
+
+  }
 
 
   Future<void> _updatePosition() async {
