@@ -242,15 +242,19 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                     child: ListTile(
-                      title: Text(
-                        'Track from ' +
-                            (track.startTime != null
-                                ? dateFormatter
+                      title: Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            'Track from ' +
+                                (track.startTime != null
+                                    ? dateFormatter
                                     .format(track.startTime!.toLocal())
-                                : 'unknown'),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                    : 'unknown'),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                       ),
-                      minVerticalPadding: 15,
+                      minVerticalPadding: 10,
+                      contentPadding: EdgeInsets.only(left: 16, right: 16, top: 7, bottom: 7),
                       subtitle: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

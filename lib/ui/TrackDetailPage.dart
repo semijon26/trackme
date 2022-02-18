@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:personal_tracking_app/model/GeoPosition.dart';
 
 import '../model/Track.dart';
 
@@ -28,7 +29,7 @@ class _TrackDetailPage extends State<TrackDetailPage> {
 
   late GoogleMapController mapController;
 
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -37,7 +38,8 @@ class _TrackDetailPage extends State<TrackDetailPage> {
   @override
   Widget build(BuildContext context) {
     Track track = widget.track;
-
+    GeoPosition middlePos = track.getPositionAt(track.positions.length ~/ 2);
+    LatLng _center = LatLng(middlePos.latitude!, middlePos.longitude!);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,
