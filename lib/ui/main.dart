@@ -207,6 +207,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return const Icon(Icons.play_arrow, color: Colors.white, size: 100);
   }
 
+
+
   Widget buildListView(BuildContext context) {
     return WatchBoxBuilder(
         box: Hive.box('tracks'),
@@ -320,7 +322,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    _timer = new Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 200), (Timer timer) {
       setState(() {});
     });
     super.initState();

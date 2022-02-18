@@ -45,7 +45,7 @@ class Recorder {
 
     const LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 10,
+      distanceFilter: 5,
     );
     positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position pos) {
       _latitude = pos.latitude;
@@ -56,7 +56,7 @@ class Recorder {
       track?.startTime ??= pos.timestamp;
       GeoPosition newPos = GeoPosition.fromPosition(_latitude, _longitude, _speed, _timestamp);
       track?.positions.add(newPos);
-      track?.endTime = pos.timestamp;
+      track?.endTime = DateTime.now();
       track?.save();
     });
   }
