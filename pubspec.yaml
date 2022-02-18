@@ -44,6 +44,9 @@ dependencies:
 
   flutter_slidable: ^1.2.0
 
+  google_maps_flutter: ^2.1.1
+  google_maps_flutter_web: ^0.3.2+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

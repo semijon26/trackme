@@ -1,24 +1,47 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 
 import '../model/Track.dart';
 
-class TrackDetailPage extends StatelessWidget {
-  DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
-  DateFormat timeFormatter = DateFormat('h:mm a');
+DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
+DateFormat timeFormatter = DateFormat('h:mm a');
+
+
+class TrackDetailPage extends StatefulWidget {
+
   final Track track;
 
   TrackDetailPage(this.track, {Key? key}) : super(key: key);
 
 
   @override
+  State<TrackDetailPage> createState() {
+    return _TrackDetailPage();
+  }
+}
+
+
+class _TrackDetailPage extends State<TrackDetailPage> {
+
+  late GoogleMapController mapController;
+
+  final LatLng _center = const LatLng(45.521563, -122.677433);
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    Track track = widget.track;
+
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.share))
+          IconButton(onPressed: () {}, icon: const Icon(Icons.ios_share))
         ],
         title: Text(
           'Track from ' +
@@ -31,21 +54,33 @@ class TrackDetailPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Container(
+                height: 460,
+                width: 360,
+                margin: const EdgeInsets.only(bottom: 10),
+                child: GoogleMap(
+                  onMapCreated: _onMapCreated,
+                  initialCameraPosition: CameraPosition(
+                    target: _center,
+                    zoom: 11.0
+                  ),
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 90,
+                    height: 50,
                     width: 170,
                     child: Card(
-                      margin: const EdgeInsets.only(top: 15, right: 7),
+                      margin: const EdgeInsets.only(top: 5, right: 7),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text((track.totalDistance != -1 ? formatDistance(track.totalDistance) : 'unknown'),
                               style: const TextStyle(
-                                  fontSize: 20, color: Colors.brown),),
+                                  fontSize: 14, color: Colors.indigo),),
                             const Text('Distance'),
                           ],
                         ),
@@ -53,17 +88,17 @@ class TrackDetailPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 90,
+                    height: 50,
                     width: 170,
                     child: Card(
-                      margin: const EdgeInsets.only(top: 15, left: 7),
+                      margin: const EdgeInsets.only(top: 5, left: 7),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text((getDuration(track) != null ? getDuration(track)! : 'unknown'),
                               style: const TextStyle(
-                                  fontSize: 20, color: Colors.brown),),
+                                  fontSize: 14, color: Colors.indigo),),
                             const Text('Duration'),
                           ],
                         ),
@@ -76,17 +111,17 @@ class TrackDetailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 90,
+                    height: 50,
                     width: 170,
                     child: Card(
-                      margin: const EdgeInsets.only(top: 15, right: 7),
+                      margin: const EdgeInsets.only(top: 5, right: 7),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text((track.startTime != null ? timeFormatter.format(track.startTime!.toLocal()) : 'unknown'),
                               style: const TextStyle(
-                                  fontSize: 14, color: Colors.brown),),
+                                  fontSize: 14, color: Colors.indigo),),
                             const Text('Start Time'),
                           ],
                         ),
@@ -94,17 +129,17 @@ class TrackDetailPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 90,
+                    height: 50,
                     width: 170,
                     child: Card(
-                      margin: const EdgeInsets.only(top: 15, left: 7),
+                      margin: const EdgeInsets.only(top: 5, left: 7),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text((track.startTime != null ? timeFormatter.format(track.endTime!.toLocal()) : 'unknown'),
                               style: const TextStyle(
-                                  fontSize: 14, color: Colors.brown),),
+                                  fontSize: 14, color: Colors.indigo),),
                             const Text('End Time'),
                           ],
                         ),
@@ -117,17 +152,17 @@ class TrackDetailPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: 90,
+                    height: 50,
                     width: 170,
                     child: Card(
-                      margin: const EdgeInsets.only(top: 15, right: 7),
+                      margin: const EdgeInsets.only(top: 5, right: 7),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(_formatAndCheckSpeedValue(track.maxSpeed),
                               style: const TextStyle(
-                                  fontSize: 14, color: Colors.brown),),
+                                  fontSize: 14, color: Colors.indigo),),
                             const Text('Max Speed'),
                           ],
                         ),
@@ -135,17 +170,17 @@ class TrackDetailPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    height: 90,
+                    height: 50,
                     width: 170,
                     child: Card(
-                      margin: const EdgeInsets.only(top: 15, left: 7),
+                      margin: const EdgeInsets.only(top: 5, left: 7),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(_formatAndCheckSpeedValue(track.avgSpeed),
                               style: const TextStyle(
-                                  fontSize: 14, color: Colors.brown),),
+                                  fontSize: 14, color: Colors.indigo),),
                             const Text('Avg Speed'),
                           ],
                         ),
@@ -198,5 +233,4 @@ class TrackDetailPage extends StatelessWidget {
     }
     return '$s km/h';
   }
-
 }

@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Personal Tracking App',
       theme: ThemeData(
-        primarySwatch: Colors.brown,
+        primarySwatch: Colors.green,
       ),
       home: FutureBuilder(
         future: Hive.openBox('tracks'),
@@ -95,9 +95,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.indigo,
         title: Text(widget.title),
         automaticallyImplyLeading: false,
-        bottom: const TabBar(tabs: [
+        bottom: const TabBar(
+            indicatorColor: Colors.white,
+            tabs: [
           Tab(text: 'RECORD', icon: Icon(Icons.album_outlined)),
           Tab(text: 'SAVED', icon: Icon(Icons.save)),
         ]),
@@ -129,11 +132,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(_isRecording ? recorder.latitude.toString() : '--',
-                          style: const TextStyle(fontSize: 24, color: Colors.brown),),
+                          style: const TextStyle(fontSize: 28, color: Color.fromRGBO(132, 128, 0, 100)),),
                         const Text('Latitude'),
                         Text(''),
                         Text(_isRecording ? recorder.longitude.toString() : '--',
-                          style: const TextStyle(fontSize: 24, color: Colors.brown),),
+                          style: const TextStyle(fontSize: 28, color: Color.fromRGBO(132, 128, 0, 100)),),
                         const Text('Longitude'),
                       ],
                     ),
@@ -153,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(_isRecording ? _getRecordingTime() : '--',
-                              style: const TextStyle(fontSize: 24, color: Colors.brown),),
+                              style: const TextStyle(fontSize: 24, color: Colors.indigo),),
                             const Text('Recording Time'),
                           ],
                         ),
@@ -172,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             Text(_isRecording
                                 ? _formatAndCheckSpeedValue(recorder.speed)
                                 : '--',
-                              style: const TextStyle(fontSize: 24, color: Colors.brown),
+                              style: const TextStyle(fontSize: 24, color: Colors.indigo),
                             ),
                             const Text('Speed'),
                           ],
@@ -199,9 +202,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Color _getStartStopButtonColor() {
     if (_isRecording) {
-      return Colors.red;
+      return Color.fromRGBO(204, 0, 0, 100);
     }
-    return Colors.green;
+    return Colors.indigo;
   }
 
   Icon _getStartStopButtonIcon() {
