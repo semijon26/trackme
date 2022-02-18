@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -15,41 +14,13 @@ class Recorder {
   double _speed = 0;
   DateTime? _timestamp;
 
+  StreamSubscription<Position>? positionStream;
+
+  //ValueNotifier _notifier = ValueNotifier(_timestamp);
+
+
 
   Future<void> _updatePosition(Track track) async {
-    while(_isRecording) {
-      Position pos = await _determinePosition();
-      _latitude = pos.latitude;
-      _longitude = pos.longitude;
-      _speed = pos.speed;
-      _timestamp = pos.timestamp;
-      print(_latitude.toString() + ' - ' + _longitude.toString() + ' - ' + _speed.toString());
-
-      track.startTime ??= _timestamp;
-      GeoPosition newPos = GeoPosition.fromPosition(_latitude, _longitude, _speed, _timestamp);
-      track.positions.add(newPos);
-      await Future.delayed(const Duration(milliseconds: 500));
-    }
-
-    track.endTime = _timestamp;
-    track.save();
-    // zwischenspeichern
-  }
-
-
-  void startRecording() {
-    _isRecording = true;
-    final newTrack = Track();
-    Hive.box('tracks').add(newTrack);
-    _updatePosition(newTrack);
-  }
-
-  Future<void> stopRecording() async {
-    _isRecording = false;
-  }
-
-
-  Future<Position> _determinePosition() async {
 
     bool serviceEnabled;
     LocationPermission permission;
@@ -71,7 +42,35 @@ class Recorder {
       return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    return await Geolocator.getCurrentPosition();
+    const LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.bestForNavigation,
+      distanceFilter: 10,
+    );
+    positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position pos) {
+      _latitude = pos.latitude;
+      _longitude = pos.longitude;
+      _speed = pos.speed;
+      _timestamp = pos.timestamp;
+      print(_latitude.toString() + ' - ' + _longitude.toString() + ' - ' + _speed.toString());
+      track.startTime ??= pos.timestamp;
+      GeoPosition newPos = GeoPosition.fromPosition(_latitude, _longitude, _speed, _timestamp);
+      track.positions.add(newPos);
+      track.endTime = pos.timestamp;
+      track.save();
+    });
+  }
+
+
+  void startRecording() {
+    _isRecording = true;
+    final newTrack = Track();
+    Hive.box('tracks').add(newTrack);
+    _updatePosition(newTrack);
+  }
+
+  Future<void> stopRecording() async {
+    positionStream?.cancel();
+    _isRecording = false;
   }
 
 
