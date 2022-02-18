@@ -22,11 +22,6 @@ class Recorder {
   );
 
 
-  Recorder () {
-
-  }
-
-
   Future<void> _updatePosition() async {
 
     bool serviceEnabled;
