@@ -13,19 +13,6 @@ class TrackDetailPage extends StatelessWidget {
 
   TrackDetailPage(this.track, {Key? key}) : super(key: key);
 
-  String? getDuration (Track track) {
-    DateTime? dtStart = track.startTime;
-    DateTime? dtEnd = track.endTime;
-    Duration duration;
-    if (dtStart == null || dtEnd == null) {
-      return null;
-    }
-    duration = dtEnd.difference(dtStart);
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +44,7 @@ class TrackDetailPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text((track.totalDistance() != -1 ? track.totalDistance().toString() + "m" : 'unknown'),
+                            Text((track.totalDistance() != -1 ? formatDistance(track.totalDistance()) : 'unknown'),
                               style: const TextStyle(
                                   fontSize: 20, color: Colors.brown),),
                             const Text('Distance'),
@@ -172,6 +159,33 @@ class TrackDetailPage extends StatelessWidget {
           )
       ),
     );
+  }
+
+  String formatDistance(int distanceInMeters) {
+    String s = "";
+    if (distanceInMeters > 999) {
+      double distanceInKilometers = distanceInMeters.toDouble();
+      distanceInKilometers = distanceInKilometers / 1000;
+      s = double.parse(distanceInKilometers.toStringAsFixed(2)).toString();
+      s = '$s km';
+    } else {
+      s = '$distanceInMeters m';
+    }
+    return s;
+  }
+
+  String? getDuration (Track track) {
+    DateTime? dtStart = track.startTime;
+    DateTime? dtEnd = track.endTime;
+    Duration duration;
+    if (dtStart == null || dtEnd == null) {
+      return null;
+    }
+    duration = dtEnd.difference(dtStart);
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
   String _formatAndCheckSpeedValue(double speedInMetersPerSec) {

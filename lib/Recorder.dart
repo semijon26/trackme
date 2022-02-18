@@ -17,8 +17,12 @@ class Recorder {
 
   StreamSubscription<Position>? positionStream;
 
-  //ValueNotifier _notifier = ValueNotifier(_timestamp);
+  static LocationSettings locationSettings = const LocationSettings(
+    accuracy: LocationAccuracy.bestForNavigation,
+    distanceFilter: 5,
+  );
 
+  //ValueNotifier _notifier = ValueNotifier(_timestamp);
 
 
   Future<void> _updatePosition() async {
@@ -43,10 +47,7 @@ class Recorder {
       return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
 
-    const LocationSettings locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 5,
-    );
+
     positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position pos) {
       _latitude = pos.latitude;
       _longitude = pos.longitude;
