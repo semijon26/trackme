@@ -40,6 +40,7 @@ class _TrackDetailPage extends State<TrackDetailPage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.indigo,
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.ios_share))
         ],
