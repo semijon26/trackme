@@ -18,7 +18,7 @@ class Recorder {
 
   static LocationSettings locationSettings = const LocationSettings(
     accuracy: LocationAccuracy.bestForNavigation,
-    distanceFilter: 5,
+    distanceFilter: 2,
   );
 
 
@@ -55,6 +55,7 @@ class Recorder {
       GeoPosition newPos = GeoPosition.fromPosition(_latitude, _longitude, _speed, _timestamp);
       track?.positions.add(newPos);
       track?.endTime = DateTime.now();
+      track?.calculateTrackData();
       track?.save();
     });
   }
@@ -69,6 +70,7 @@ class Recorder {
 
   Future<void> stopRecording() async {
     track?.endTime = DateTime.now();
+    track?.calculateTrackData();
     track?.save();
     positionStream?.cancel();
     _isRecording = false;

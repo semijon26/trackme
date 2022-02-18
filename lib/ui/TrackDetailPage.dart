@@ -43,7 +43,7 @@ class TrackDetailPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text((track.totalDistance() != -1 ? formatDistance(track.totalDistance()) : 'unknown'),
+                            Text((track.totalDistance != -1 ? formatDistance(track.totalDistance) : 'unknown'),
                               style: const TextStyle(
                                   fontSize: 20, color: Colors.brown),),
                             const Text('Distance'),
@@ -125,7 +125,7 @@ class TrackDetailPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(_formatAndCheckSpeedValue(track.maxSpeed()),
+                            Text(_formatAndCheckSpeedValue(track.maxSpeed),
                               style: const TextStyle(
                                   fontSize: 14, color: Colors.brown),),
                             const Text('Max Speed'),
@@ -143,7 +143,7 @@ class TrackDetailPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(_formatAndCheckSpeedValue(track.avgSpeed()),
+                            Text(_formatAndCheckSpeedValue(track.avgSpeed),
                               style: const TextStyle(
                                   fontSize: 14, color: Colors.brown),),
                             const Text('Avg Speed'),

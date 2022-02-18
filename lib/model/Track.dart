@@ -17,6 +17,16 @@ class Track extends HiveObject {
   // ignore: prefer_final_fields
   var _positions = <GeoPosition>[];
 
+  @HiveField(3)
+  double _avgSpeed = 0;
+
+  @HiveField(4)
+  double _maxSpeed = 0;
+
+  @HiveField(5)
+  int _totalDistance = 0;
+
+
   void addPosition(GeoPosition position) {
     _positions.add(position);
   }
@@ -25,7 +35,13 @@ class Track extends HiveObject {
     return _positions[index];
   }
 
-  double avgSpeed() {
+  calculateTrackData() {
+    _avgSpeed = _calcAvgSpeed();
+    _maxSpeed = _calcMaxSpeed();
+    _totalDistance = _calcTotalDistance();
+  }
+
+  double _calcAvgSpeed() {
     double avg = 0;
     for (GeoPosition pos in _positions) {
       if (pos.speed != null) {
@@ -36,7 +52,7 @@ class Track extends HiveObject {
     return avg;
   }
 
-  double maxSpeed() {
+  double _calcMaxSpeed() {
     double max = 0;
     for (GeoPosition pos in _positions) {
       if (pos.speed != null) {
@@ -48,7 +64,7 @@ class Track extends HiveObject {
     return max;
   }
 
-  int totalDistance() {
+  int _calcTotalDistance() {
     double totalDist = 0;
 
     for (GeoPosition pos1 in _positions) {
@@ -82,8 +98,15 @@ class Track extends HiveObject {
 
   DateTime? get startTime => _startTime;
 
+  double get avgSpeed => _avgSpeed;
+
+  double get maxSpeed => _maxSpeed;
+
+  int get totalDistance => _totalDistance;
+
   @override
   String toString() {
     return 'Track{_startTime: $_startTime, _endTime: $_endTime, poslist}';
   }
+
 }

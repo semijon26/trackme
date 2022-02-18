@@ -13,7 +13,7 @@ import 'dart:math';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/services.dart';
 
-Recorder recorder = Recorder(); // listener mit reingeben
+Recorder recorder = Recorder();
 DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
 DateFormat timeFormatter = DateFormat('h:mm a');
 DateTime? _startButtonTimestamp;
@@ -278,7 +278,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const Text('Max. Speed: ',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
-                              Text(_formatAndCheckSpeedValue(track.maxSpeed())),
+                              Text(_formatAndCheckSpeedValue(track.maxSpeed)),
                             ],
                           ),
                           Column(
@@ -286,7 +286,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const Text('Avg. Speed: ',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
-                              Text(_formatAndCheckSpeedValue(track.avgSpeed())),
+                              Text(_formatAndCheckSpeedValue(track.avgSpeed)),
                             ],
                           ),
                         ],

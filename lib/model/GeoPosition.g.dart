@@ -17,9 +17,9 @@ class GeoPositionAdapter extends TypeAdapter<GeoPosition> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return GeoPosition()
-      .._latitude = fields[0] as double
-      .._longitude = fields[1] as double
-      .._speed = fields[2] as double
+      .._latitude = fields[0] as double?
+      .._longitude = fields[1] as double?
+      .._speed = fields[2] as double?
       .._timestamp = fields[3] as DateTime?;
   }
 
