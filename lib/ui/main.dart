@@ -12,6 +12,7 @@ import 'package:personal_tracking_app/model/GeoPosition.dart';
 import 'package:personal_tracking_app/model/Track.dart';
 import 'dart:math';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter/services.dart';
 
 Recorder recorder = Recorder(); // listener mit reingeben
 DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
@@ -22,6 +23,10 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TrackAdapter());
   Hive.registerAdapter(GeoPositionAdapter());
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown
+  ]);
   runApp(const MyApp());
 }
 
