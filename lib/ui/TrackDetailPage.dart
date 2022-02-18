@@ -62,6 +62,7 @@ class _TrackDetailPage extends State<TrackDetailPage> {
                 width: 360,
                 margin: const EdgeInsets.only(bottom: 10),
                 child: GoogleMap(
+                  compassEnabled: true,
                   onMapCreated: _onMapCreated,
                   initialCameraPosition: CameraPosition(
                     target: _center,
