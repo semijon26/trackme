@@ -1,10 +1,12 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_tracking_app/model/GeoPosition.dart';
-
+import 'package:share_plus/share_plus.dart';
+import '../GpxExport.dart';
 import '../model/Track.dart';
 
 DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
@@ -15,7 +17,7 @@ class TrackDetailPage extends StatefulWidget {
 
   final Track track;
 
-  TrackDetailPage(this.track, {Key? key}) : super(key: key);
+  const TrackDetailPage(this.track, {Key? key}) : super(key: key);
 
 
   @override
@@ -28,8 +30,6 @@ class TrackDetailPage extends StatefulWidget {
 class _TrackDetailPage extends State<TrackDetailPage> {
 
   late GoogleMapController mapController;
-
-
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -44,7 +44,7 @@ class _TrackDetailPage extends State<TrackDetailPage> {
       appBar: AppBar(
         backgroundColor: Colors.indigo,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.ios_share))
+          IconButton(onPressed: () => _share(context, track), icon: const Icon(Icons.ios_share))
         ],
         title: Text(
           'Track from ' +
@@ -199,6 +199,17 @@ class _TrackDetailPage extends State<TrackDetailPage> {
           )
       ),
     );
+  }
+
+  Future<void> _share(BuildContext context, Track track) async {
+    GpxExport _gpxExport = GpxExport(track);
+    //String message = "Share this track";
+    RenderBox? box = context.findRenderObject() as RenderBox;
+
+    final path = await _gpxExport.writeXml();
+
+    Share.shareFiles([path], subject: "My Track",
+    sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
   String formatDistance(int distanceInMeters) {

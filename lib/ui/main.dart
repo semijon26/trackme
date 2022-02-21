@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Personal Tracking App',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: Colors.indigo,
       ),
       home: FutureBuilder(
         future: Hive.openBox('tracks'),
