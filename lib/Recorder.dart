@@ -74,6 +74,9 @@ class Recorder {
     track?.save();
     positionStream?.cancel();
     _isRecording = false;
+    if(track?.startTime == null || track?.positions.length == 0) {
+      track?.delete();
+    }
   }
 
 

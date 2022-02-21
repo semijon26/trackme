@@ -62,11 +62,12 @@ class _TrackDetailPage extends State<TrackDetailPage> {
                 width: 360,
                 margin: const EdgeInsets.only(bottom: 10),
                 child: GoogleMap(
+                  polylines: _drawPolyline(),
                   compassEnabled: true,
                   onMapCreated: _onMapCreated,
                   initialCameraPosition: CameraPosition(
                     target: _center,
-                    zoom: 11.0
+                    zoom: 15.0
                   ),
                 ),
               ),
@@ -236,5 +237,25 @@ class _TrackDetailPage extends State<TrackDetailPage> {
       s = ((speedInMetersPerSec * mod).round().toDouble() / mod).toString();
     }
     return '$s km/h';
+  }
+
+  Set<Polyline>_drawPolyline() {
+    Track track = widget.track;
+    Set<Polyline> polylines = {};
+    var latLngSegment = <LatLng>[];
+
+    for (GeoPosition pos in track.positions) {
+      LatLng latLngPos = LatLng(pos.latitude!, pos.longitude!);
+      latLngSegment.add(latLngPos);
+    }
+
+    polylines.add(Polyline(
+      polylineId: PolylineId(track.startTime.toString()),
+      visible: true,
+      color: Colors.indigo,
+      points: latLngSegment,
+      width: 2,
+    ));
+    return polylines;
   }
 }
