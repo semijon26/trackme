@@ -63,6 +63,7 @@ class _TrackDetailPage extends State<TrackDetailPage> {
                 margin: const EdgeInsets.only(bottom: 10),
                 child: GoogleMap(
                   polylines: _drawPolyline(),
+                  markers: _drawMarkers(),
                   compassEnabled: true,
                   onMapCreated: _onMapCreated,
                   initialCameraPosition: CameraPosition(
@@ -254,8 +255,36 @@ class _TrackDetailPage extends State<TrackDetailPage> {
       visible: true,
       color: Colors.indigo,
       points: latLngSegment,
-      width: 2,
+      width: 8,
     ));
     return polylines;
   }
+
+  Set<Marker> _drawMarkers() {
+    Track track = widget.track;
+    Set<Marker> markers = {};
+    LatLng startPos = LatLng(
+        track.positions.last.latitude!, track.positions.last.longitude!);
+    LatLng endPos =
+        LatLng(track.positions.first.latitude!, track.positions.first.longitude!);
+    markers.add(Marker(
+        markerId: MarkerId(track.endTime.toString()),
+        position: endPos,
+        //icon: Icons.play_arrow,
+        infoWindow: InfoWindow(
+          title: ('Started here at ' +
+              timeFormatter.format(track.startTime!.toLocal())),),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+    ));
+    markers.add(Marker(
+      markerId: MarkerId(track.endTime.toString()),
+      position: startPos,
+      infoWindow: InfoWindow(
+        title: ('Ended here at ' +
+            timeFormatter.format(track.endTime!.toLocal())),),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure)));
+
+    return markers;
+  }
+
 }

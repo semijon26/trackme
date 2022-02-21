@@ -17,7 +17,7 @@ class Recorder {
   StreamSubscription<Position>? positionStream;
 
   static LocationSettings locationSettings = const LocationSettings(
-    accuracy: LocationAccuracy.bestForNavigation,
+    accuracy: LocationAccuracy.best,
     distanceFilter: 2,
   );
 
