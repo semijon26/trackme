@@ -31,6 +31,11 @@ class Track extends HiveObject {
   // ignore: prefer_final_fields
   var _photos = <String>[]; // saves path with file name of every photo
 
+  @HiveField(7)
+  double _minAltitude = 0;
+
+  @HiveField(8)
+  double _maxAltitude = 0;
 
 
   void addPosition(GeoPosition position) {
@@ -48,6 +53,8 @@ class Track extends HiveObject {
   calculateTrackData() {
     _avgSpeed = _calcAvgSpeed();
     _maxSpeed = _calcMaxSpeed();
+    _minAltitude = _calcMinAltitude();
+    _maxAltitude = _calcMaxAltitude();
     _totalDistance = _calcTotalDistance();
   }
 
@@ -68,6 +75,30 @@ class Track extends HiveObject {
       if (pos.speed != null) {
         if (pos.speed! > max) {
           max = pos.speed!;
+        }
+      }
+    }
+    return max;
+  }
+
+  double _calcMinAltitude() {
+    double min = double.infinity;
+    for (GeoPosition pos in _positions) {
+      if (pos.altitude != null) {
+        if (pos.altitude! < min) {
+          min = pos.altitude!;
+        }
+      }
+    }
+    return min;
+  }
+
+  double _calcMaxAltitude() {
+    double max = 0;
+    for (GeoPosition pos in _positions) {
+      if (pos.altitude != null) {
+        if (pos.altitude! > max) {
+          max = pos.altitude!;
         }
       }
     }
@@ -111,6 +142,10 @@ class Track extends HiveObject {
   double get avgSpeed => _avgSpeed;
 
   double get maxSpeed => _maxSpeed;
+
+  double get minAltitude => _minAltitude;
+
+  double get maxAltitude => _maxAltitude;
 
   int get totalDistance => _totalDistance;
 

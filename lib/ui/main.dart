@@ -128,21 +128,25 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(
-                height: 180,
+                height: 220,
                 width: 300,
                 child: Card(
-                  margin: const EdgeInsets.only(bottom: 30),
+                  margin: const EdgeInsets.only(bottom: 20),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(_isRecording ? recorder.latitude.toString() : '--',
-                          style: const TextStyle(fontSize: 28, color: Color.fromRGBO(132, 128, 0, 100)),),
+                          style: const TextStyle(fontSize: 30, color: Color.fromRGBO(132, 128, 0, 100)),),
                         const Text('Latitude'),
-                        Text(''),
+                        const Text(''),
                         Text(_isRecording ? recorder.longitude.toString() : '--',
-                          style: const TextStyle(fontSize: 28, color: Color.fromRGBO(132, 128, 0, 100)),),
+                          style: const TextStyle(fontSize: 30, color: Color.fromRGBO(132, 128, 0, 100)),),
                         const Text('Longitude'),
+                        const Text(''),
+                        Text(_isRecording ? _formatAltitude(recorder.altitude) : '--',
+                          style: const TextStyle(fontSize: 24, color: Color.fromRGBO(132, 128, 0, 100)),),
+                        const Text('Altitude'),
                       ],
                     ),
                   ),
@@ -155,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 120,
                     width: 150,
                     child: Card(
-                      margin: const EdgeInsets.only(right: 15, bottom: 30),
+                      margin: const EdgeInsets.only(right: 15, bottom: 20),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -172,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     height: 120,
                     width: 150,
                     child: Card(
-                      margin: const EdgeInsets.only(left: 15, bottom: 30),
+                      margin: const EdgeInsets.only(left: 15, bottom: 20),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -191,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(bottom: 30),
+                padding: const EdgeInsets.only(bottom: 20),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     fixedSize: const Size(300, 120),
@@ -203,7 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  fixedSize: Size(300, 70),
+                  fixedSize: const Size(300, 70),
                   primary: const Color.fromRGBO(132, 128, 0, 100)),
                 onPressed: _isRecording ? _takePhoto : () {},
                 child: const Icon(
@@ -354,6 +358,10 @@ class _MyHomePageState extends State<MyHomePage> {
       s = ((speedInMetersPerSec * mod).round().toDouble() / mod).toString();
     }
     return '$s km/h';
+  }
+
+  String _formatAltitude(double altitude) {
+    return "${altitude.round().toString()} m";
   }
 
   String _getRecordingTime() {

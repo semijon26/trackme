@@ -20,13 +20,14 @@ class GeoPositionAdapter extends TypeAdapter<GeoPosition> {
       .._latitude = fields[0] as double?
       .._longitude = fields[1] as double?
       .._speed = fields[2] as double?
-      .._timestamp = fields[3] as DateTime?;
+      .._altitude = fields[3] as double?
+      .._timestamp = fields[4] as DateTime?;
   }
 
   @override
   void write(BinaryWriter writer, GeoPosition obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj._latitude)
       ..writeByte(1)
@@ -34,6 +35,8 @@ class GeoPositionAdapter extends TypeAdapter<GeoPosition> {
       ..writeByte(2)
       ..write(obj._speed)
       ..writeByte(3)
+      ..write(obj._altitude)
+      ..writeByte(4)
       ..write(obj._timestamp);
   }
 

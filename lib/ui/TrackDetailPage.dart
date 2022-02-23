@@ -57,6 +57,8 @@ class _TrackDetailPage extends State<TrackDetailPage> {
     Track track = widget.track;
     GeoPosition middlePos = track.getPositionAt(track.positions.length ~/ 2);
     LatLng _center = LatLng(middlePos.latitude!, middlePos.longitude!);
+    const double dataBoxWidth = 110;
+    const double dataBoxHeight = 40;
 
     return Scaffold(
       appBar: AppBar(
@@ -80,7 +82,6 @@ class _TrackDetailPage extends State<TrackDetailPage> {
           Container(
             height: 360,
             width: 360,
-            margin: const EdgeInsets.only(bottom: 10),
             child: GoogleMap(
               polylines: _drawPolyline(),
               markers: _markers,
@@ -98,7 +99,7 @@ class _TrackDetailPage extends State<TrackDetailPage> {
               Container(
                 height: 80,
                 width: 360,
-                margin: const EdgeInsets.only(bottom: 10),
+                margin: const EdgeInsets.only(top: 5),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: track.photos.length,
@@ -121,10 +122,10 @@ class _TrackDetailPage extends State<TrackDetailPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 40,
-                width: 170,
+                height: dataBoxHeight,
+                width: dataBoxWidth,
                 child: Card(
-                  margin: const EdgeInsets.only(top: 5, right: 7),
+                  margin: const EdgeInsets.only(top: 5, right: 5),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -143,10 +144,10 @@ class _TrackDetailPage extends State<TrackDetailPage> {
                 ),
               ),
               SizedBox(
-                height: 40,
-                width: 170,
+                height: dataBoxHeight,
+                width: dataBoxWidth,
                 child: Card(
-                  margin: const EdgeInsets.only(top: 5, left: 7),
+                  margin: const EdgeInsets.only(top: 5, left: 5, right: 5),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -164,16 +165,101 @@ class _TrackDetailPage extends State<TrackDetailPage> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: dataBoxHeight,
+                width: dataBoxWidth,
+                child: Card(
+                  margin: const EdgeInsets.only(top: 5, left: 5),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          _formatAndCheckSpeedValue(track.avgSpeed),
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.indigo),
+                        ),
+                        const Text('Avg Speed'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 40,
-                width: 170,
+                height: dataBoxHeight,
+                width: dataBoxWidth,
                 child: Card(
-                  margin: const EdgeInsets.only(top: 5, right: 7),
+                  margin: const EdgeInsets.only(top: 5, right: 5),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          _formatAltitude(track.minAltitude),
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.indigo),
+                        ),
+                        const Text('Min Altitude'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: dataBoxHeight,
+                width: dataBoxWidth,
+                child: Card(
+                  margin: const EdgeInsets.only(top: 5, left: 5, right: 5),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          _formatAltitude(track.maxAltitude),
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.indigo),
+                        ),
+                        const Text('Max Altitude'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: dataBoxHeight,
+                width: dataBoxWidth,
+                child: Card(
+                  margin: const EdgeInsets.only(top: 5, left: 5),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          _formatAndCheckSpeedValue(track.maxSpeed),
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.indigo),
+                        ),
+                        const Text('Max Speed'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: dataBoxHeight,
+                width: dataBoxWidth,
+                child: Card(
+                  margin: const EdgeInsets.only(top: 5, right: 5),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -192,10 +278,10 @@ class _TrackDetailPage extends State<TrackDetailPage> {
                 ),
               ),
               SizedBox(
-                height: 40,
-                width: 170,
+                height: dataBoxHeight,
+                width: dataBoxWidth,
                 child: Card(
-                  margin: const EdgeInsets.only(top: 5, left: 7),
+                  margin: const EdgeInsets.only(top: 5, left: 5),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -208,51 +294,6 @@ class _TrackDetailPage extends State<TrackDetailPage> {
                               fontSize: 14, color: Colors.indigo),
                         ),
                         const Text('End Time'),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 40,
-                width: 170,
-                child: Card(
-                  margin: const EdgeInsets.only(top: 5, right: 7),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _formatAndCheckSpeedValue(track.maxSpeed),
-                          style: const TextStyle(
-                              fontSize: 14, color: Colors.indigo),
-                        ),
-                        const Text('Max Speed'),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 40,
-                width: 170,
-                child: Card(
-                  margin: const EdgeInsets.only(top: 5, left: 7),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _formatAndCheckSpeedValue(track.avgSpeed),
-                          style: const TextStyle(
-                              fontSize: 14, color: Colors.indigo),
-                        ),
-                        const Text('Avg Speed'),
                       ],
                     ),
                   ),
@@ -313,6 +354,10 @@ class _TrackDetailPage extends State<TrackDetailPage> {
       s = ((speedInMetersPerSec * mod).round().toDouble() / mod).toString();
     }
     return '$s km/h';
+  }
+
+  String _formatAltitude(double altitude) {
+    return "${altitude.round().toString()} m";
   }
 
   Set<Polyline>_drawPolyline() {

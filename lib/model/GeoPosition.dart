@@ -16,15 +16,20 @@ class GeoPosition extends HiveObject {
   double? _speed;
 
   @HiveField(3)
+  double? _altitude;
+
+  @HiveField(4)
   DateTime? _timestamp;
+
 
   GeoPosition();
 
-  GeoPosition.fromPosition(double latitude, double longitude, double speed, DateTime? timestamp) {
+  GeoPosition.fromPosition(double latitude, double longitude, double speed, DateTime? timestamp, double altitude) {
     this._latitude = latitude;
     this._longitude = longitude;
     this._speed = speed;
     this._timestamp = timestamp;
+    this._altitude = altitude;
   }
 
   double? get speed => _speed;
@@ -33,10 +38,12 @@ class GeoPosition extends HiveObject {
 
   double? get latitude => _latitude;
 
+  double? get altitude => _altitude;
+
   DateTime? get timestamp => _timestamp;
 
   @override
   String toString() {
-    return 'GeoPosition{_latitude: $_latitude, _longitude: $_longitude, _speed: $_speed, _timestamp: $_timestamp}';
+    return 'GeoPosition{_latitude: $_latitude, _longitude: $_longitude, _speed: $_speed, _altitude: $_altitude _timestamp: $_timestamp}';
   }
 }
