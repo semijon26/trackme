@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:personal_tracking_app/Recorder.dart';
 import 'package:personal_tracking_app/ui/TrackDetailPage.dart';
 import 'package:personal_tracking_app/model/GeoPosition.dart';
@@ -12,11 +14,14 @@ import 'package:personal_tracking_app/model/Track.dart';
 import 'dart:math';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 Recorder recorder = Recorder();
 DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
 DateFormat timeFormatter = DateFormat('h:mm a');
 DateTime? _startButtonTimestamp;
+String _fullPath = "";
+
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -35,7 +40,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Personal Tracking App',
+      title: 'TrackMe',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
@@ -48,7 +53,7 @@ class MyApp extends StatelessWidget {
             } else {
               return const DefaultTabController(
                 length: 2,
-                child: MyHomePage(title: 'Personal Tracking App'),
+                child: MyHomePage(title: 'TrackMe'),
               );
             }
           } else {
@@ -185,13 +190,27 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 ],
               ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 30),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(300, 120),
+                    primary: _getStartStopButtonColor(),
+                  ),
+                  onPressed: _switchRecordingStatus,
+                  child: _getStartStopButtonIcon(),
+                ),
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  fixedSize: Size(300, 150),
-                  primary: _getStartStopButtonColor(),
-                ),
-                onPressed: _switchRecordingStatus,
-                child: _getStartStopButtonIcon(),
+                  fixedSize: Size(300, 70),
+                  primary: const Color.fromRGBO(132, 128, 0, 100)),
+                onPressed: _isRecording ? _takePhoto : () {},
+                child: const Icon(
+                  Icons.add_a_photo,
+                  color: Colors.white,
+                  size: 30,
+                )
               ),
             ],
           );
@@ -202,7 +221,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Color _getStartStopButtonColor() {
     if (_isRecording) {
-      return Color.fromRGBO(204, 0, 0, 100);
+      return const Color.fromRGBO(204, 0, 0, 100);
     }
     return Colors.indigo;
   }
@@ -212,6 +231,20 @@ class _MyHomePageState extends State<MyHomePage> {
       return const Icon(Icons.stop, color: Colors.white, size: 100);
     }
     return const Icon(Icons.play_arrow, color: Colors.white, size: 100);
+  }
+
+  void _takePhoto() async {
+    print('taking photo');
+    final image = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (image == null) return;
+
+    var path = await getApplicationDocumentsDirectory();
+    var directory = await Directory('${path.path}/photos').create(recursive: true);
+    _fullPath = "${directory.path}/${image.name}";
+    final imageTemporary = File(image.path);
+    await imageTemporary.copy(_fullPath);
+
+    recorder.track!.addPhoto(_fullPath);
   }
 
 
@@ -234,7 +267,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         SlidableAction(
                           onPressed: (context) => track.delete(),
-                          backgroundColor: const Color(0xFFFE4A49),
+                          backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
                           icon: Icons.delete,
                           label: 'Delete',
@@ -344,5 +377,5 @@ class _MyHomePageState extends State<MyHomePage> {
     _timer.cancel();
     super.dispose();
   }
-
 }
+String get fullPath => _fullPath;

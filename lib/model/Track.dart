@@ -7,6 +7,7 @@ part 'Track.g.dart';
 
 @HiveType(typeId: 1)
 class Track extends HiveObject {
+
   @HiveField(0)
   DateTime? _startTime;
 
@@ -26,9 +27,18 @@ class Track extends HiveObject {
   @HiveField(5)
   int _totalDistance = 0;
 
+  @HiveField(6)
+  // ignore: prefer_final_fields
+  var _photos = <String>[]; // saves path with file name of every photo
+
+
 
   void addPosition(GeoPosition position) {
     _positions.add(position);
+  }
+
+  void addPhoto(String path) {
+    _photos.add(path);
   }
 
   GeoPosition getPositionAt(int index) {
@@ -103,6 +113,8 @@ class Track extends HiveObject {
   double get maxSpeed => _maxSpeed;
 
   int get totalDistance => _totalDistance;
+
+  List<String> get photos => _photos;
 
   @override
   String toString() {

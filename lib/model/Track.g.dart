@@ -22,13 +22,14 @@ class TrackAdapter extends TypeAdapter<Track> {
       .._positions = (fields[2] as List).cast<GeoPosition>()
       .._avgSpeed = fields[3] as double
       .._maxSpeed = fields[4] as double
-      .._totalDistance = fields[5] as int;
+      .._totalDistance = fields[5] as int
+      .._photos = (fields[6] as List).cast<String>();
   }
 
   @override
   void write(BinaryWriter writer, Track obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj._startTime)
       ..writeByte(1)
@@ -40,7 +41,9 @@ class TrackAdapter extends TypeAdapter<Track> {
       ..writeByte(4)
       ..write(obj._maxSpeed)
       ..writeByte(5)
-      ..write(obj._totalDistance);
+      ..write(obj._totalDistance)
+      ..writeByte(6)
+      ..write(obj._photos);
   }
 
   @override

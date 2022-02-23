@@ -6,7 +6,7 @@ import 'package:personal_tracking_app/model/Track.dart';
 
 class Recorder {
 
-  bool _isRecording = false;
+  bool isRecording = false;
 
   double _latitude = 0;
   double _longitude = 0;
@@ -62,7 +62,7 @@ class Recorder {
 
 
   void startRecording() {
-    _isRecording = true;
+    isRecording = true;
     track = Track();
     Hive.box('tracks').add(track);
     _updatePosition();
@@ -73,7 +73,7 @@ class Recorder {
     track?.calculateTrackData();
     track?.save();
     positionStream?.cancel();
-    _isRecording = false;
+    isRecording = false;
     if(track?.startTime == null || track?.positions.length == 0) {
       track?.delete();
     }
@@ -81,9 +81,7 @@ class Recorder {
 
 
   // Getter & Setter
-  bool get isRecording => _isRecording;
-
-  set isRecording(bool value) => _isRecording = value;
+  //
 
   get speed => _speed;
 

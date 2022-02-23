@@ -28,10 +28,12 @@ class GpxExport {
 
     final path = await getTemporaryDirectory();
 
-    File file = File("${path.path}/myTrack.gpx");
+    String fullPath = "${path.path}/myTrack.gpx";
+
+    File file = File(fullPath);
     await file.writeAsString(gpxAsString);
 
-    return "${path.path}/myTrack.gpx";
+    return fullPath;
   }
 
 }
