@@ -2,8 +2,8 @@
 import 'dart:io';
 import 'package:gpx/gpx.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:personal_tracking_app/model/GeoPosition.dart';
-import 'model/Track.dart';
+import 'package:personal_tracking_app/model/geo_position.dart';
+import 'model/track.dart';
 
 class GpxExport {
 

@@ -7,10 +7,10 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:personal_tracking_app/Recorder.dart';
-import 'package:personal_tracking_app/ui/TrackDetailPage.dart';
-import 'package:personal_tracking_app/model/GeoPosition.dart';
-import 'package:personal_tracking_app/model/Track.dart';
+import 'package:personal_tracking_app/recorder.dart';
+import 'package:personal_tracking_app/ui/track_detail_page.dart';
+import 'package:personal_tracking_app/model/geo_position.dart';
+import 'package:personal_tracking_app/model/track.dart';
 import 'dart:math';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/services.dart';
@@ -258,6 +258,7 @@ class _MyHomePageState extends State<MyHomePage> {
         box: Hive.box('tracks'),
         builder: (context, tracksBox) {
           return ListView.builder(
+            physics: const BouncingScrollPhysics(),
             itemCount: tracksBox.length,
             itemBuilder: (context, index) {
               final track = tracksBox.getAt(index) as Track;

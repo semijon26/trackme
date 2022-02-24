@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'Track.dart';
+part of 'track.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:personal_tracking_app/model/GeoPosition.dart';
-import 'package:personal_tracking_app/model/Track.dart';
+import 'package:personal_tracking_app/model/geo_position.dart';
+import 'package:personal_tracking_app/model/track.dart';
 
 class Recorder {
 

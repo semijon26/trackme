@@ -1,7 +1,7 @@
 
 import 'package:hive_flutter/hive_flutter.dart';
 
-part 'GeoPosition.g.dart';
+part 'geo_position.g.dart';
 
 @HiveType(typeId: 2)
 class GeoPosition extends HiveObject {

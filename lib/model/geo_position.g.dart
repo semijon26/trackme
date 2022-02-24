@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'GeoPosition.dart';
+part of 'geo_position.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator

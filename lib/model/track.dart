@@ -1,9 +1,9 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'GeoPosition.dart';
+import 'geo_position.dart';
 
-part 'Track.g.dart';
+part 'track.g.dart';
 
 @HiveType(typeId: 1)
 class Track extends HiveObject {
@@ -103,6 +103,27 @@ class Track extends HiveObject {
       }
     }
     return max;
+  }
+
+  double calcDistanceAt(int positionsIndex) {
+    double totalDist = 0;
+
+    for (int i = 0; i < positionsIndex; i++) {
+      GeoPosition pos1 = _positions.elementAt(i);
+      if (pos1.latitude != null && pos1.longitude != null) {
+        GeoPosition pos2;
+        if (_positions.length > _positions.indexOf(pos1)+1) {
+          pos2 = _positions.elementAt(_positions.indexOf(pos1)+1);
+          if (pos2.latitude != null && pos2.longitude != null) {
+            totalDist = totalDist + Geolocator.distanceBetween(pos1.latitude!, pos1.longitude!, pos2.latitude!, pos2.longitude!);
+          }else {
+            return -1;
+          }
+        }
+      }
+    }
+    double totalDistRounded = totalDist.roundToDouble();
+    return totalDistRounded;
   }
 
   int _calcTotalDistance() {
