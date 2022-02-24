@@ -25,11 +25,11 @@ class GeoPosition extends HiveObject {
   GeoPosition();
 
   GeoPosition.fromPosition(double latitude, double longitude, double speed, DateTime? timestamp, double altitude) {
-    this._latitude = latitude;
-    this._longitude = longitude;
-    this._speed = speed;
-    this._timestamp = timestamp;
-    this._altitude = altitude;
+    _latitude = latitude;
+    _longitude = longitude;
+    _speed = speed;
+    _timestamp = timestamp;
+    _altitude = altitude;
   }
 
   double? get speed => _speed;

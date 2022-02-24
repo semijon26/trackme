@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -11,26 +9,22 @@ import 'package:personal_tracking_app/recorder.dart';
 import 'package:personal_tracking_app/ui/track_detail_page.dart';
 import 'package:personal_tracking_app/model/geo_position.dart';
 import 'package:personal_tracking_app/model/track.dart';
-import 'dart:math';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../value_format.dart';
+
 Recorder recorder = Recorder();
-DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
-DateFormat timeFormatter = DateFormat('h:mm a');
 DateTime? _startButtonTimestamp;
 String _fullPath = "";
-
 
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TrackAdapter());
   Hive.registerAdapter(GeoPositionAdapter());
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown
-  ]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(const MyApp());
 }
 
@@ -84,12 +78,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void _switchRecordingStatus() {
     setState(() {
       if (!_isRecording) {
-        // nimmt noch nicht auf -> starte
         _startButtonTimestamp = DateTime.now();
         recorder.startRecording();
         _isRecording = recorder.isRecording;
       } else {
-        // nimmt schon auf -> stoppe
         recorder.stopRecording();
         _isRecording = recorder.isRecording;
       }
@@ -103,9 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.indigo,
         title: Text(widget.title),
         automaticallyImplyLeading: false,
-        bottom: const TabBar(
-            indicatorColor: Colors.white,
-            tabs: [
+        bottom: const TabBar(indicatorColor: Colors.white, tabs: [
           Tab(text: 'RECORD', icon: Icon(Icons.album_outlined)),
           Tab(text: 'SAVED', icon: Icon(Icons.save)),
         ]),
@@ -136,16 +126,30 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(_isRecording ? recorder.latitude.toString() : '--',
-                          style: const TextStyle(fontSize: 30, color: Color.fromRGBO(132, 128, 0, 100)),),
+                        Text(
+                          _isRecording ? recorder.latitude.toString() : '--',
+                          style: const TextStyle(
+                              fontSize: 30,
+                              color: Color.fromRGBO(132, 128, 0, 100)),
+                        ),
                         const Text('Latitude'),
                         const Text(''),
-                        Text(_isRecording ? recorder.longitude.toString() : '--',
-                          style: const TextStyle(fontSize: 30, color: Color.fromRGBO(132, 128, 0, 100)),),
+                        Text(
+                          _isRecording ? recorder.longitude.toString() : '--',
+                          style: const TextStyle(
+                              fontSize: 30,
+                              color: Color.fromRGBO(132, 128, 0, 100)),
+                        ),
                         const Text('Longitude'),
                         const Text(''),
-                        Text(_isRecording ? _formatAltitude(recorder.altitude) : '--',
-                          style: const TextStyle(fontSize: 24, color: Color.fromRGBO(132, 128, 0, 100)),),
+                        Text(
+                          _isRecording
+                              ? ValueFormat().formatAltitude(recorder.altitude)
+                              : '--',
+                          style: const TextStyle(
+                              fontSize: 24,
+                              color: Color.fromRGBO(132, 128, 0, 100)),
+                        ),
                         const Text('Altitude'),
                       ],
                     ),
@@ -164,8 +168,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(_isRecording ? _getRecordingTime() : '--',
-                              style: const TextStyle(fontSize: 24, color: Colors.indigo),),
+                            Text(
+                              _isRecording ? _getRecordingTime() : '--',
+                              style: const TextStyle(
+                                  fontSize: 24, color: Colors.indigo),
+                            ),
                             const Text('Recording Time'),
                           ],
                         ),
@@ -181,10 +188,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(_isRecording
-                                ? _formatAndCheckSpeedValue(recorder.speed)
-                                : '--',
-                              style: const TextStyle(fontSize: 24, color: Colors.indigo),
+                            Text(
+                              _isRecording
+                                  ? ValueFormat()
+                                      .formatAndCheckSpeedValue(recorder.speed)
+                                  : '--',
+                              style: const TextStyle(
+                                  fontSize: 24, color: Colors.indigo),
                             ),
                             const Text('Speed'),
                           ],
@@ -206,21 +216,30 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(300, 70),
-                  primary: const Color.fromRGBO(132, 128, 0, 100)),
-                onPressed: _isRecording ? _takePhoto : () {},
-                child: const Icon(
-                  Icons.add_a_photo,
-                  color: Colors.white,
-                  size: 30,
-                )
-              ),
+                  style: _getPhotoButtonStyle(),
+                  onPressed: _isRecording ? _takePhoto : () {},
+                  child: const Icon(
+                    Icons.add_a_photo,
+                    color: Colors.white,
+                    size: 30,
+                  )),
             ],
           );
         },
       ),
     );
+  }
+
+  ButtonStyle _getPhotoButtonStyle() {
+    if (_isRecording) {
+      return ElevatedButton.styleFrom(
+          fixedSize: const Size(300, 70),
+          primary: const Color.fromRGBO(132, 128, 0, 100));
+    }
+    return ElevatedButton.styleFrom(
+        splashFactory: NoSplash.splashFactory,
+        fixedSize: const Size(300, 70),
+        primary: Colors.black12.withOpacity(.01));
   }
 
   Color _getStartStopButtonColor() {
@@ -243,15 +262,14 @@ class _MyHomePageState extends State<MyHomePage> {
     if (image == null) return;
 
     var path = await getApplicationDocumentsDirectory();
-    var directory = await Directory('${path.path}/photos').create(recursive: true);
+    var directory =
+        await Directory('${path.path}/photos').create(recursive: true);
     _fullPath = "${directory.path}/${image.name}";
     final imageTemporary = File(image.path);
     await imageTemporary.copy(_fullPath);
 
     recorder.track!.addPhoto(_fullPath);
   }
-
-
 
   Widget buildListView(BuildContext context) {
     return WatchBoxBuilder(
@@ -264,105 +282,85 @@ class _MyHomePageState extends State<MyHomePage> {
               final track = tracksBox.getAt(index) as Track;
               return Card(
                   child: Slidable(
-                    closeOnScroll: true,
-                    dragStartBehavior: DragStartBehavior.start,
-                    endActionPane: ActionPane(
-                      extentRatio: .35,
-                      motion: const DrawerMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: (context) => track.delete(),
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Delete',
-                        ),
-                      ],
+                closeOnScroll: true,
+                dragStartBehavior: DragStartBehavior.start,
+                endActionPane: ActionPane(
+                  extentRatio: .35,
+                  motion: const DrawerMotion(),
+                  children: [
+                    SlidableAction(
+                      onPressed: (context) => track.delete(),
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      icon: Icons.delete,
+                      label: 'Delete',
                     ),
-                    child: ListTile(
-                      title: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            'Track from ' +
-                                (track.startTime != null
-                                    ? dateFormatter
-                                    .format(track.startTime!.toLocal())
-                                    : 'unknown'),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                      ),
-                      minVerticalPadding: 10,
-                      contentPadding: EdgeInsets.only(left: 16, right: 16, top: 7, bottom: 7),
-                      subtitle: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  ],
+                ),
+                child: ListTile(
+                  title: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      'Track from ' +
+                          (track.startTime != null
+                              ? ValueFormat().dateFormatter.format(track.startTime!.toLocal())
+                              : 'unknown'),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  minVerticalPadding: 10,
+                  contentPadding: const EdgeInsets.only(
+                      left: 16, right: 16, top: 7, bottom: 7),
+                  subtitle: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
                         children: [
-                          Column(
-                            children: [
-                              const Text('Start Time: ',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              Text(track.startTime != null
-                                  ? timeFormatter
-                                      .format(track.startTime!.toLocal())
-                                  : 'unknown'),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              const Text('End Time: ',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              Text(track.endTime != null
-                                  ? timeFormatter
-                                      .format(track.endTime!.toLocal())
-                                  : 'unknown'),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              const Text('Max. Speed: ',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              Text(_formatAndCheckSpeedValue(track.maxSpeed)),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              const Text('Avg. Speed: ',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              Text(_formatAndCheckSpeedValue(track.avgSpeed)),
-                            ],
-                          ),
+                          const Text('Start Time: ',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(track.startTime != null
+                              ? ValueFormat().timeFormatter.format(track.startTime!.toLocal())
+                              : 'unknown'),
                         ],
                       ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TrackDetailPage(track)));
-                      },
-                    ),
-                  ));
+                      Column(
+                        children: [
+                          const Text('End Time: ',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(track.endTime != null
+                              ? ValueFormat().timeFormatter.format(track.endTime!.toLocal())
+                              : 'unknown'),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          const Text('Max. Speed: ',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(ValueFormat()
+                              .formatAndCheckSpeedValue(track.maxSpeed)),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          const Text('Avg. Speed: ',
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text(ValueFormat()
+                              .formatAndCheckSpeedValue(track.avgSpeed)),
+                        ],
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TrackDetailPage(track)));
+                  },
+                ),
+              ));
             },
           );
         });
-  }
-
-  String _formatAndCheckSpeedValue(double speedInMetersPerSec) {
-    speedInMetersPerSec = speedInMetersPerSec * 3.6;
-    String s = "";
-    if (speedInMetersPerSec.isNaN || speedInMetersPerSec.isInfinite) {
-      return "unknown";
-    } else {
-      num mod = pow(10.0, 2);
-      s = ((speedInMetersPerSec * mod).round().toDouble() / mod).toString();
-    }
-    return '$s km/h';
-  }
-
-  String _formatAltitude(double altitude) {
-    return "${altitude.round().toString()} m";
   }
 
   String _getRecordingTime() {
@@ -387,4 +385,5 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 }
+
 String get fullPath => _fullPath;
