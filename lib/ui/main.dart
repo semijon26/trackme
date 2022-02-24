@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -11,10 +9,11 @@ import 'package:personal_tracking_app/recorder.dart';
 import 'package:personal_tracking_app/ui/track_detail_page.dart';
 import 'package:personal_tracking_app/model/geo_position.dart';
 import 'package:personal_tracking_app/model/track.dart';
-import 'dart:math';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../value_format.dart';
 
 Recorder recorder = Recorder();
 DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
@@ -144,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           style: const TextStyle(fontSize: 30, color: Color.fromRGBO(132, 128, 0, 100)),),
                         const Text('Longitude'),
                         const Text(''),
-                        Text(_isRecording ? _formatAltitude(recorder.altitude) : '--',
+                        Text(_isRecording ? ValueFormat().formatAltitude(recorder.altitude) : '--',
                           style: const TextStyle(fontSize: 24, color: Color.fromRGBO(132, 128, 0, 100)),),
                         const Text('Altitude'),
                       ],
@@ -182,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(_isRecording
-                                ? _formatAndCheckSpeedValue(recorder.speed)
+                                ? ValueFormat().formatAndCheckSpeedValue(recorder.speed)
                                 : '--',
                               style: const TextStyle(fontSize: 24, color: Colors.indigo),
                             ),
@@ -292,7 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                       ),
                       minVerticalPadding: 10,
-                      contentPadding: EdgeInsets.only(left: 16, right: 16, top: 7, bottom: 7),
+                      contentPadding: const EdgeInsets.only(left: 16, right: 16, top: 7, bottom: 7),
                       subtitle: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -323,7 +322,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const Text('Max. Speed: ',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
-                              Text(_formatAndCheckSpeedValue(track.maxSpeed)),
+                              Text(ValueFormat().formatAndCheckSpeedValue(track.maxSpeed)),
                             ],
                           ),
                           Column(
@@ -331,7 +330,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               const Text('Avg. Speed: ',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
-                              Text(_formatAndCheckSpeedValue(track.avgSpeed)),
+                              Text(ValueFormat().formatAndCheckSpeedValue(track.avgSpeed)),
                             ],
                           ),
                         ],
@@ -347,22 +346,6 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           );
         });
-  }
-
-  String _formatAndCheckSpeedValue(double speedInMetersPerSec) {
-    speedInMetersPerSec = speedInMetersPerSec * 3.6;
-    String s = "";
-    if (speedInMetersPerSec.isNaN || speedInMetersPerSec.isInfinite) {
-      return "unknown";
-    } else {
-      num mod = pow(10.0, 2);
-      s = ((speedInMetersPerSec * mod).round().toDouble() / mod).toString();
-    }
-    return '$s km/h';
-  }
-
-  String _formatAltitude(double altitude) {
-    return "${altitude.round().toString()} m";
   }
 
   String _getRecordingTime() {

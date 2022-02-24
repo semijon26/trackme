@@ -9,10 +9,10 @@ part 'track.g.dart';
 class Track extends HiveObject {
 
   @HiveField(0)
-  DateTime? _startTime;
+  DateTime? startTime;
 
   @HiveField(1)
-  DateTime? _endTime;
+  DateTime? endTime;
 
   @HiveField(2)
   // ignore: prefer_final_fields
@@ -146,19 +146,7 @@ class Track extends HiveObject {
     return totalDistRounded;
   }
 
-  set startTime(DateTime? startTime) {
-    _startTime = startTime;
-  }
-
-  set endTime(DateTime? endTime) {
-    _endTime = endTime;
-  }
-
   List<GeoPosition> get positions => _positions;
-
-  DateTime? get endTime => _endTime;
-
-  DateTime? get startTime => _startTime;
 
   double get avgSpeed => _avgSpeed;
 
@@ -174,7 +162,7 @@ class Track extends HiveObject {
 
   @override
   String toString() {
-    return 'Track{_startTime: $_startTime, _endTime: $_endTime, poslist}';
+    return 'Track{_startTime: $startTime, _endTime: $endTime, poslist}';
   }
 
 }

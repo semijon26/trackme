@@ -17,8 +17,8 @@ class TrackAdapter extends TypeAdapter<Track> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Track()
-      .._startTime = fields[0] as DateTime?
-      .._endTime = fields[1] as DateTime?
+      ..startTime = fields[0] as DateTime?
+      ..endTime = fields[1] as DateTime?
       .._positions = (fields[2] as List).cast<GeoPosition>()
       .._avgSpeed = fields[3] as double
       .._maxSpeed = fields[4] as double
@@ -33,9 +33,9 @@ class TrackAdapter extends TypeAdapter<Track> {
     writer
       ..writeByte(9)
       ..writeByte(0)
-      ..write(obj._startTime)
+      ..write(obj.startTime)
       ..writeByte(1)
-      ..write(obj._endTime)
+      ..write(obj.endTime)
       ..writeByte(2)
       ..write(obj._positions)
       ..writeByte(3)
