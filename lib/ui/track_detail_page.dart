@@ -4,12 +4,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:personal_tracking_app/ui/google_map_window.dart';
 import 'package:personal_tracking_app/ui/line_chart_widget.dart';
+import 'package:personal_tracking_app/ui/photo_view.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../gpx_export.dart';
 import '../model/track.dart';
 import '../value_format.dart';
-
 
 class TrackDetailPage extends StatefulWidget {
   final Track track;
@@ -22,8 +22,18 @@ class TrackDetailPage extends StatefulWidget {
   }
 }
 
-
 class _TrackDetailPageState extends State<TrackDetailPage> {
+
+  Future<void> _shareTrack(BuildContext context, Track track) async {
+    GpxExport _gpxExport = GpxExport(track);
+    RenderBox? box = context.findRenderObject() as RenderBox;
+
+    final path = await _gpxExport.writeXml();
+
+    Share.shareFiles([path],
+        subject: "My Track",
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +50,9 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
         title: Text(
           'Track from ' +
               (track.startTime != null
-                  ? ValueFormat().dateFormatter.format(track.startTime!.toLocal())
+                  ? ValueFormat()
+                      .dateFormatter
+                      .format(track.startTime!.toLocal())
                   : 'unknown'),
         ),
       ),
@@ -67,9 +79,18 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
                       margin: const EdgeInsets.all(1),
                       width: 100,
                       height: 100,
-                      child: Image.file(
-                        File(photo),
-                        fit: BoxFit.cover,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PhotoView(widget.track, photo)))
+                              .then((value) => setState(() {}));
+                        },
+                        child: Image.file(
+                          File(photo),
+                          fit: BoxFit.cover,
+                        ),
                       ));
                 },
               ),
@@ -84,7 +105,9 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
               title: Text(
                 "Start Time: " +
                     (track.startTime != null
-                        ? ValueFormat().timeFormatter.format(track.startTime!.toLocal())
+                        ? ValueFormat()
+                            .timeFormatter
+                            .format(track.startTime!.toLocal())
                         : 'unknown'),
               ),
             ),
@@ -93,7 +116,9 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
               title: Text(
                 "End Time: " +
                     (track.startTime != null
-                        ? ValueFormat().timeFormatter.format(track.endTime!.toLocal())
+                        ? ValueFormat()
+                            .timeFormatter
+                            .format(track.endTime!.toLocal())
                         : 'unknown'),
               ),
             ),
@@ -147,16 +172,5 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
         ),
       ),
     );
-  }
-
-  Future<void> _shareTrack(BuildContext context, Track track) async {
-    GpxExport _gpxExport = GpxExport(track);
-    RenderBox? box = context.findRenderObject() as RenderBox;
-
-    final path = await _gpxExport.writeXml();
-
-    Share.shareFiles([path],
-        subject: "My Track",
-        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 }

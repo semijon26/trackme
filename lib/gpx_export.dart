@@ -28,7 +28,7 @@ class GpxExport {
 
     final path = await getTemporaryDirectory();
 
-    String fullPath = "${path.path}/myTrack.gpx";
+    String fullPath = "${path.path}/MyTrack.gpx";
 
     File file = File(fullPath);
     await file.writeAsString(gpxAsString);

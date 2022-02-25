@@ -7,28 +7,24 @@ import '../model/geo_position.dart';
 import '../model/track.dart';
 import '../value_format.dart';
 
-class GoogleMapWindow extends StatefulWidget{
-
+class GoogleMapWindow extends StatefulWidget {
   final Track track;
-
 
   const GoogleMapWindow(this.track, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _GoogleMapWindowState(track);
+    return _GoogleMapWindowState();
   }
 }
 
-
 class _GoogleMapWindowState extends State<GoogleMapWindow> {
-  Track track;
   late GoogleMapController mapController;
   final Set<Marker> _markers = {};
   late BitmapDescriptor _startMarkerIcon;
   late BitmapDescriptor _endMarkerIcon;
 
-  _GoogleMapWindowState(this.track);
+  _GoogleMapWindowState();
 
   @override
   void initState() {
@@ -47,13 +43,13 @@ class _GoogleMapWindowState extends State<GoogleMapWindow> {
     Set<Polyline> polylines = {};
     var latLngSegment = <LatLng>[];
 
-    for (GeoPosition pos in track.positions) {
+    for (GeoPosition pos in widget.track.positions) {
       LatLng latLngPos = LatLng(pos.latitude!, pos.longitude!);
       latLngSegment.add(latLngPos);
     }
 
     polylines.add(Polyline(
-      polylineId: PolylineId(track.startTime.toString()),
+      polylineId: PolylineId(widget.track.startTime.toString()),
       visible: true,
       color: Colors.indigo,
       points: latLngSegment,
@@ -63,6 +59,7 @@ class _GoogleMapWindowState extends State<GoogleMapWindow> {
   }
 
   _createMarkers() {
+    Track track = widget.track;
     LatLng endPos =
         LatLng(track.positions.last.latitude!, track.positions.last.longitude!);
     LatLng startPos = LatLng(
@@ -95,13 +92,14 @@ class _GoogleMapWindowState extends State<GoogleMapWindow> {
 
   @override
   Widget build(BuildContext context) {
+    Track track = widget.track;
     GeoPosition middlePos = track.getPositionAt(track.positions.length ~/ 2);
     LatLng _center = LatLng(middlePos.latitude!, middlePos.longitude!);
 
     return GoogleMap(
       gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
         Factory<OneSequenceGestureRecognizer>(
-              () => EagerGestureRecognizer(),
+          () => EagerGestureRecognizer(),
         ),
       },
       polylines: _drawPolyline(),
@@ -114,5 +112,4 @@ class _GoogleMapWindowState extends State<GoogleMapWindow> {
       ),
     );
   }
-
 }

@@ -46,6 +46,14 @@ class Track extends HiveObject {
     _photos.add(path);
   }
 
+  void removePhoto(String path) {
+    try {
+      _photos.remove(path);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   GeoPosition getPositionAt(int index) {
     return _positions[index];
   }
