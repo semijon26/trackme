@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -25,7 +26,7 @@ class _SavedPageState extends State<SavedPage>
         box: Hive.box('tracks'),
         builder: (context, tracksBox) {
           return ListView.builder(
-            physics: const BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             itemCount: tracksBox.length,
             itemBuilder: (context, index) {
               final track = tracksBox.getAt(index) as Track;

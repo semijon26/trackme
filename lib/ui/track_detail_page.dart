@@ -72,6 +72,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
               margin: const EdgeInsets.only(top: 5),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                 itemCount: track.photos.length,
                 itemBuilder: (context, index) {
                   final photo = track.photos.elementAt(index);

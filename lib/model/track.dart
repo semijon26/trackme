@@ -37,6 +37,13 @@ class Track extends HiveObject {
   @HiveField(8)
   double _maxAltitude = 0;
 
+  bool isValidTrack () {
+    if (positions.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
 
   void addPosition(GeoPosition position) {
     _positions.add(position);

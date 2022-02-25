@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -101,10 +102,49 @@ class _RecordPageState extends State<RecordPage>
         recorder.startRecording();
         _isRecording = recorder.isRecording;
       } else {
-        recorder.stopRecording();
-        _isRecording = recorder.isRecording;
+        _showAlertDialog(context);
       }
     });
+  }
+
+  _showAlertDialog(BuildContext context) {
+    Widget cancelButton = TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Text("Cancel"));
+
+    Widget confirmButton = TextButton(
+        onPressed: () {
+          recorder.stopRecording();
+          bool? isSuccessful = recorder.track?.isValidTrack();
+          _isRecording = recorder.isRecording;
+          Navigator.pop(context);
+          if (isSuccessful!) {
+            Fluttertoast.showToast(
+                msg: "saved",
+                backgroundColor: Colors.grey.shade200,
+                textColor: Colors.indigo);
+          } else {
+            Fluttertoast.showToast(
+                msg: "not saved",
+                backgroundColor: Colors.grey.shade200,
+                textColor: Colors.indigo);
+          }
+        },
+        child: const Text("Stop"));
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("Stop Recording?"),
+      actions: [cancelButton, confirmButton],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 
   @override

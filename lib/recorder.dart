@@ -84,7 +84,7 @@ class Recorder {
     track?.save();
     positionStream?.cancel();
     isRecording = false;
-    if (track?.startTime == null || track?.positions.length == 0) {
+    if (!(track!.isValidTrack())) {
       track?.delete();
     }
   }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:personal_tracking_app/ui/record_page.dart';
@@ -69,17 +68,17 @@ class _MyHomePageState extends State<MyHomePage> {
         automaticallyImplyLeading: false,
         bottom: const TabBar(
             indicatorColor: Colors.white,
-            physics: BouncingScrollPhysics(),
-            dragStartBehavior: DragStartBehavior.down,
+            physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             tabs: [
               Tab(text: 'RECORD', icon: Icon(Icons.album_outlined)),
               Tab(text: 'SAVED', icon: Icon(Icons.save)),
             ]),
       ),
       body: TabBarView(
+        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         children: [
           RecordPage(),
-          SavedPage(),
+          const SavedPage(),
         ],
       ),
     );
