@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'model/track.dart';
 
 class ValueFormat {
-
   DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
   DateFormat timeFormatter = DateFormat('h:mm a');
 
@@ -51,5 +50,4 @@ class ValueFormat {
   String formatAltitude(double altitude) {
     return "${altitude.round().toString()} m";
   }
-
 }

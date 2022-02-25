@@ -1,11 +1,11 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:personal_tracking_app/model/geo_position.dart';
 import 'package:personal_tracking_app/model/track.dart';
 
 class Recorder {
-
   bool isRecording = false;
 
   double _latitude = 0;
@@ -22,9 +22,7 @@ class Recorder {
     distanceFilter: 2,
   );
 
-
   Future<void> _updatePosition() async {
-
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -42,26 +40,36 @@ class Recorder {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
 
-
-    positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position pos) {
+    positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position pos) {
       _latitude = pos.latitude;
       _longitude = pos.longitude;
       _speed = pos.speed;
       _altitude = pos.altitude;
       _timestamp = pos.timestamp;
-      print(_latitude.toString() + ' - ' + _longitude.toString() + ' - ' + _speed.toString() + ' - ' + _altitude.toString());
+      if (kDebugMode) {
+        print(_latitude.toString() +
+          ' - ' +
+          _longitude.toString() +
+          ' - ' +
+          _speed.toString() +
+          ' - ' +
+          _altitude.toString());
+      }
       track?.startTime ??= pos.timestamp;
-      GeoPosition newPos = GeoPosition.fromPosition(_latitude, _longitude, _speed, _timestamp, _altitude);
+      GeoPosition newPos = GeoPosition.fromPosition(
+          _latitude, _longitude, _speed, _timestamp, _altitude);
       track?.positions.add(newPos);
       track?.endTime = DateTime.now();
       track?.calculateTrackData();
       track?.save();
     });
   }
-
 
   void startRecording() {
     isRecording = true;
@@ -76,13 +84,10 @@ class Recorder {
     track?.save();
     positionStream?.cancel();
     isRecording = false;
-    if(track?.startTime == null || track?.positions.length == 0) {
+    if (track?.startTime == null || track?.positions.length == 0) {
       track?.delete();
     }
   }
-
-
-  // Getter & Setter
 
   get speed => _speed;
 
