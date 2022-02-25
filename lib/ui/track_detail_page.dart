@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:personal_tracking_app/ui/google_map_window.dart';
 import 'package:personal_tracking_app/ui/line_chart_widget.dart';
-import 'package:personal_tracking_app/ui/photo_view.dart';
+import 'package:personal_tracking_app/ui/photo_fullscreen.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../gpx_export.dart';
@@ -67,6 +67,10 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
               height: 430,
               child: GoogleMapWindow(track),
             ),
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 5),
+              child: Text("Photos", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
             Container(
               height: 100,
               margin: const EdgeInsets.only(top: 5),
@@ -85,7 +89,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PhotoView(widget.track, photo)))
+                                  builder: (context) => PhotoFullscreen(widget.track, photo)))
                               .then((value) => setState(() {}));
                         },
                         child: Image.file(
@@ -96,10 +100,18 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
                 },
               ),
             ),
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 5),
+              child: Text("Altitude Chart", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
             Container(
               height: 170,
               margin: const EdgeInsets.only(top: 5),
               child: LineChartWidget(track),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 5),
+              child: Text("Details", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
             ),
             ListTile(
               leading: const Icon(Icons.play_arrow_outlined),

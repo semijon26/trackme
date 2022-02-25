@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -44,6 +47,20 @@ class Track extends HiveObject {
     return false;
   }
 
+
+  Future<bool> removeWithPhotos() async {
+    try {
+      for(String photoPath in photos) {
+        removePhoto(photoPath);
+        await File(photoPath).delete();
+      }
+      delete();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 
   void addPosition(GeoPosition position) {
     _positions.add(position);

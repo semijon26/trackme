@@ -5,22 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart' as pv;
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../model/track.dart';
 
-class PhotoView extends StatefulWidget {
+class PhotoFullscreen extends StatefulWidget {
   final String photoPath;
   final Track track;
 
-  const PhotoView(this.track, this.photoPath, {Key? key}) : super(key: key);
+  const PhotoFullscreen(this.track, this.photoPath, {Key? key})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _PhotoViewState();
+    return _PhotoFullscreenState();
   }
 }
 
-class _PhotoViewState extends State<PhotoView> {
+class _PhotoFullscreenState extends State<PhotoFullscreen> {
   late Uint8List imageBytes;
 
   @override
@@ -97,12 +99,24 @@ class _PhotoViewState extends State<PhotoView> {
         textColor: Colors.indigo);
   }
 
+  Future<void> _sharePhoto(BuildContext context, String photoPath) async {
+    RenderBox? box = context.findRenderObject() as RenderBox;
+    Share.shareFiles([photoPath],
+        subject: "TrackPhoto",
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
           actions: [
+            IconButton(
+                onPressed: () {
+                  _sharePhoto(context, widget.photoPath);
+                },
+                icon: const Icon(Icons.ios_share)),
             IconButton(
                 onPressed: () {
                   _saveImage();
@@ -118,8 +132,21 @@ class _PhotoViewState extends State<PhotoView> {
           ],
         ),
         body: Container(
-          color: Colors.black,
-          child: pv.PhotoView(imageProvider: MemoryImage(imageBytes)),
-        ));
+            color: Colors.black,
+            child: pv.PhotoView(
+              imageProvider: MemoryImage(imageBytes),
+              loadingBuilder: (context, event) => Center(
+                child: SizedBox(
+                  width: 20.0,
+                  height: 20.0,
+                  child: CircularProgressIndicator(
+                    value: event == null
+                        ? 0
+                        : event.cumulativeBytesLoaded /
+                            event.expectedTotalBytes!,
+                  ),
+                ),
+              ),
+            )));
   }
 }

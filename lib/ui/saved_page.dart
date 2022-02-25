@@ -20,6 +20,34 @@ class _SavedPageState extends State<SavedPage>
   @override
   bool get wantKeepAlive => true;
 
+  _showAlertDialog(BuildContext context, Track track) {
+    Widget cancelButton = TextButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Text("Cancel"));
+
+    Widget confirmButton = TextButton(
+        onPressed: () {
+          track.removeWithPhotos();
+          Navigator.pop(context);
+        },
+        child: const Text("Delete"));
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("Delete Track?"),
+      content: const Text("This track will be deleted with all its information and photos."),
+      actions: [cancelButton, confirmButton],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WatchBoxBuilder(
@@ -39,7 +67,7 @@ class _SavedPageState extends State<SavedPage>
                   motion: const DrawerMotion(),
                   children: [
                     SlidableAction(
-                      onPressed: (context) => track.delete(),
+                      onPressed: (context){_showAlertDialog(context, track);},
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
                       icon: Icons.delete,
