@@ -38,6 +38,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
   @override
   Widget build(BuildContext context) {
     Track track = widget.track;
+    double googleMapHeight = 430;
 
     return Scaffold(
       appBar: AppBar(
@@ -64,8 +65,8 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
           padding: const EdgeInsets.all(7),
           children: [
             SizedBox(
-              height: 430,
-              child: GoogleMapWindow(track),
+              height: googleMapHeight,
+              child: GoogleMapWindow(track, googleMapHeight),
             ),
             const Padding(
               padding: EdgeInsets.only(top: 20, bottom: 5),
