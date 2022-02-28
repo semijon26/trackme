@@ -23,20 +23,6 @@ class PhotoFullscreen extends StatefulWidget {
 }
 
 class _PhotoFullscreenState extends State<PhotoFullscreen> {
-  late Uint8List imageBytes;
-
-  @override
-  void initState() {
-    super.initState();
-    _convertImageToBytes().then((value) {
-      setState(() {});
-    });
-  }
-
-  Future<void> _convertImageToBytes() async {
-    File imageFile = File(widget.photoPath);
-    imageBytes = await imageFile.readAsBytes();
-  }
 
   _showAlertDialog(BuildContext context) {
     Widget cancelButton = TextButton(
@@ -102,7 +88,7 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
   Future<void> _sharePhoto(BuildContext context, String photoPath) async {
     RenderBox? box = context.findRenderObject() as RenderBox;
     Share.shareFiles([photoPath],
-        subject: "TrackPhoto",
+        subject: "Track Photo",
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
@@ -134,7 +120,7 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
         body: Container(
             color: Colors.black,
             child: pv.PhotoView(
-              imageProvider: MemoryImage(imageBytes),
+              imageProvider: FileImage(File(widget.photoPath)),
               loadingBuilder: (context, event) => Center(
                 child: SizedBox(
                   width: 20.0,

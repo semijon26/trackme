@@ -20,7 +20,8 @@ class _SavedPageState extends State<SavedPage>
   @override
   bool get wantKeepAlive => true;
 
-  _showAlertDialog(BuildContext context, Track track) {
+  // Funktioniert nicht------------------------
+  _showAlertDialog(context, Track track) {
     Widget cancelButton = TextButton(
         onPressed: () {
           Navigator.pop(context);
@@ -67,7 +68,8 @@ class _SavedPageState extends State<SavedPage>
                       motion: const DrawerMotion(),
                       children: [
                         SlidableAction(
-                          onPressed: (context){_showAlertDialog(context, track);},
+                          //onPressed: (context){_showAlertDialog(context, track);},
+                          onPressed: (context) {track.delete();},
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
                           icon: Icons.delete,
