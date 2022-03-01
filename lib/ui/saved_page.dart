@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:personal_tracking_app/ui/track_detail_page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../model/track.dart';
 import '../value_format.dart';
@@ -22,22 +23,23 @@ class _SavedPageState extends State<SavedPage>
 
   // Funktioniert nicht------------------------
   _showAlertDialog(context, Track track) {
+    var t = AppLocalizations.of(context)!;
     Widget cancelButton = TextButton(
         onPressed: () {
           Navigator.pop(context);
         },
-        child: const Text("Cancel"));
+        child: Text(t.cancel));
 
     Widget confirmButton = TextButton(
         onPressed: () {
           track.removeWithPhotos();
           Navigator.pop(context);
         },
-        child: const Text("Delete"));
+        child: Text(t.delete));
 
     AlertDialog alert = AlertDialog(
-      title: const Text("Delete Track?"),
-      content: const Text("This track will be deleted with all its information and photos."),
+      title: Text(t.deleteTrackQuestion),
+      content: Text(t.onDeleteDescription),
       actions: [cancelButton, confirmButton],
     );
 
@@ -51,6 +53,7 @@ class _SavedPageState extends State<SavedPage>
 
   @override
   Widget build(BuildContext context) {
+    var t = AppLocalizations.of(context)!;
     return ValueListenableBuilder<Box>(
         valueListenable: Hive.box('tracks').listenable(),
         builder: (BuildContext context, Box tracks, Widget? child) {
@@ -73,7 +76,7 @@ class _SavedPageState extends State<SavedPage>
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
                           icon: Icons.delete,
-                          label: 'Delete',
+                          label: t.delete,
                         ),
                       ],
                     ),
@@ -81,12 +84,12 @@ class _SavedPageState extends State<SavedPage>
                       title: Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Text(
-                          'Track from ' +
+                          t.trackFrom + " " +
                               (track.startTime != null
                                   ? ValueFormat()
                                   .dateFormatter
                                   .format(track.startTime!.toLocal())
-                                  : 'unknown'),
+                                  : t.unknown),
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -98,40 +101,36 @@ class _SavedPageState extends State<SavedPage>
                         children: [
                           Column(
                             children: [
-                              const Text('Start Time: ',
-                                  style: TextStyle(fontWeight: FontWeight.bold)),
+                              const Icon(Icons.play_arrow_outlined),
                               Text(track.startTime != null
                                   ? ValueFormat()
                                   .timeFormatter
                                   .format(track.startTime!.toLocal())
-                                  : 'unknown'),
+                                  : t.unknown),
                             ],
                           ),
                           Column(
                             children: [
-                              const Text('End Time: ',
-                                  style: TextStyle(fontWeight: FontWeight.bold)),
+                              const Icon(Icons.stop_outlined),
                               Text(track.endTime != null
                                   ? ValueFormat()
                                   .timeFormatter
                                   .format(track.endTime!.toLocal())
-                                  : 'unknown'),
+                                  : t.unknown),
                             ],
                           ),
                           Column(
                             children: [
-                              const Text('Max. Speed: ',
-                                  style: TextStyle(fontWeight: FontWeight.bold)),
-                              Text(ValueFormat()
-                                  .formatAndCheckSpeedValue(track.maxSpeed)),
+                              const Icon(Icons.route_outlined),
+                              Text(track.totalDistance != -1
+                                      ? ValueFormat().formatDistance(track.totalDistance)
+                                      : t.unknown)
                             ],
                           ),
                           Column(
                             children: [
-                              const Text('Avg. Speed: ',
-                                  style: TextStyle(fontWeight: FontWeight.bold)),
-                              Text(ValueFormat()
-                                  .formatAndCheckSpeedValue(track.avgSpeed)),
+                              Icon(Icons.speed),
+                              Text(ValueFormat().formatAndCheckSpeedValue(track.avgSpeed)),
                             ],
                           ),
                         ],

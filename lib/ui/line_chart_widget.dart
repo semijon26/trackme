@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:personal_tracking_app/model/track.dart';
 import '../model/geo_position.dart';
@@ -24,60 +25,71 @@ class LineChartWidget extends StatelessWidget {
   }
 
   @override
-  Widget build (BuildContext context) {
+  Widget build(BuildContext context) {
+    var t = AppLocalizations.of(context)!;
     return LineChart(LineChartData(
-      titlesData: FlTitlesData(
-          bottomTitles: SideTitles(showTitles: false),
-          rightTitles: SideTitles(showTitles: false),
-          topTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 14,
-          ),
-          leftTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-          )),
-      axisTitleData: FlAxisTitleData(
-          leftTitle: AxisTitle(
-              showTitle: true,
-              margin: 0,
-              titleText: "altitude in meters",
-              textAlign: TextAlign.center),
-          topTitle: AxisTitle(
-              showTitle: true,
-              margin: 0,
-              titleText: "distance in meters",
-              textAlign: TextAlign.center)),
-      minX: 0,
-      maxX: track.totalDistance.toDouble(),
-      minY: track.minAltitude,
-      maxY: track.maxAltitude,
-      gridData: FlGridData(
-        show: true,
-      ),
-      lineBarsData: [
-        LineChartBarData(
-            spots: _getSpotsList(track),
-            isCurved: true,
-            preventCurveOvershootingThreshold: 20,
-            colors: gradientColors,
-            dotData: FlDotData(
-              show: false,
+        titlesData: FlTitlesData(
+            bottomTitles: SideTitles(showTitles: false),
+            rightTitles: SideTitles(showTitles: false),
+            topTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 14,
             ),
-            belowBarData: BarAreaData(
-              show: true,
-              colors: gradientColors
-                  .map((color) => color.withOpacity(0.2))
-                  .toList(),
-            ))
-      ],
-      lineTouchData: LineTouchData(
-          enabled: true,
-          touchTooltipData: LineTouchTooltipData(
-            tooltipBgColor: Colors.indigo.withOpacity(.2),
-            /*getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
-
-            }*/
-          ))));
+            leftTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 40,
+            )),
+        axisTitleData: FlAxisTitleData(
+            leftTitle: AxisTitle(
+                showTitle: true,
+                margin: 5,
+                titleText: t.altitudeInMeters,
+                textAlign: TextAlign.center,
+                textStyle: const TextStyle(color: Colors.indigo)),
+            topTitle: AxisTitle(
+                showTitle: true,
+                margin: 5,
+                titleText: t.distanceInMeters,
+                textAlign: TextAlign.center,
+                textStyle: const TextStyle(color: Colors.indigo))),
+        minX: 0,
+        maxX: track.totalDistance.toDouble(),
+        minY: track.minAltitude,
+        maxY: track.maxAltitude,
+        gridData: FlGridData(
+          show: true,
+        ),
+        lineBarsData: [
+          LineChartBarData(
+              spots: _getSpotsList(track),
+              isCurved: true,
+              colors: gradientColors,
+              dotData: FlDotData(
+                show: false,
+              ),
+              belowBarData: BarAreaData(
+                show: true,
+                colors: gradientColors
+                    .map((color) => color.withOpacity(0.2))
+                    .toList(),
+              ))
+        ],
+        lineTouchData: LineTouchData(
+            enabled: true,
+            touchTooltipData: LineTouchTooltipData(
+                tooltipBgColor: Colors.white.withOpacity(.8),
+                getTooltipItems: (touchedSpots) {
+                  return touchedSpots.map((LineBarSpot touchedSpot) {
+                    final textStyle = TextStyle(
+                      color: touchedSpot.bar.colors[0],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    );
+                    return LineTooltipItem(
+                        '${t.distance}: ${touchedSpot.x.round()} m'
+                            '\n${t.altitude}: ${touchedSpot.y.round()} m',
+                        textStyle);
+                  }).toList();
+                }))));
   }
 }

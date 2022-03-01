@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart' as pv;
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../model/track.dart';
 
@@ -25,20 +25,21 @@ class PhotoFullscreen extends StatefulWidget {
 class _PhotoFullscreenState extends State<PhotoFullscreen> {
 
   _showAlertDialog(BuildContext context) {
+    var t = AppLocalizations.of(context)!;
     Widget cancelButton = TextButton(
         onPressed: () {
           Navigator.pop(context);
         },
-        child: const Text("Cancel"));
+        child: Text(t.cancel));
 
     Widget continueButton = TextButton(
         onPressed: () {
           _deleteImage();
         },
-        child: const Text("Delete"));
+        child: Text(t.delete));
 
     AlertDialog alert = AlertDialog(
-      title: const Text("Delete Photo?"),
+      title: Text(t.deletePhotoQuestion),
       actions: [cancelButton, continueButton],
     );
 
@@ -51,6 +52,7 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
   }
 
   _deleteImage() async {
+    var t = AppLocalizations.of(context)!;
     try {
       widget.track.removePhoto(widget.photoPath);
       widget.track.save();
@@ -60,27 +62,28 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
         return count++ == 2;
       });
       return Fluttertoast.showToast(
-          msg: "deleted",
+          msg: t.deletedToastMsg,
           backgroundColor: Colors.grey.shade200,
           textColor: Colors.indigo);
     } catch (e) {
       return Fluttertoast.showToast(
-          msg: "could not delete",
+          msg: t.couldntDeleteToastMsg,
           backgroundColor: Colors.grey.shade200,
           textColor: Colors.indigo);
     }
   }
 
   _saveImage() async {
+    var t = AppLocalizations.of(context)!;
     bool? isSuccessful = await GallerySaver.saveImage(widget.photoPath);
     if (isSuccessful!) {
       return Fluttertoast.showToast(
-          msg: "saved",
+          msg: t.savedToastMsg,
           backgroundColor: Colors.grey.shade200,
           textColor: Colors.indigo);
     }
     return Fluttertoast.showToast(
-        msg: "could not save",
+        msg: t.couldntSaveToastMsg,
         backgroundColor: Colors.grey.shade200,
         textColor: Colors.indigo);
   }
@@ -91,6 +94,8 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
         subject: "Track Photo",
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +126,7 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
             color: Colors.black,
             child: pv.PhotoView(
               imageProvider: FileImage(File(widget.photoPath)),
-              loadingBuilder: (context, event) => Center(
+              /*loadingBuilder: (context, event) => Center(
                 child: SizedBox(
                   width: 20.0,
                   height: 20.0,
@@ -132,7 +137,7 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
                             event.expectedTotalBytes!,
                   ),
                 ),
-              ),
+              ),*/
             )));
   }
 }

@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:personal_tracking_app/ui/google_map_window.dart';
+import 'package:personal_tracking_app/ui/google_map_widget.dart';
 import 'package:personal_tracking_app/ui/line_chart_widget.dart';
 import 'package:personal_tracking_app/ui/photo_fullscreen.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../gpx_export.dart';
 import '../model/track.dart';
@@ -37,6 +38,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    var t = AppLocalizations.of(context)!;
     Track track = widget.track;
     double googleMapHeight = 430;
 
@@ -49,12 +51,12 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
               icon: const Icon(Icons.ios_share))
         ],
         title: Text(
-          'Track from ' +
+          '${t.trackFrom} ' +
               (track.startTime != null
                   ? ValueFormat()
                       .dateFormatter
                       .format(track.startTime!.toLocal())
-                  : 'unknown'),
+                  : t.unknown),
         ),
       ),
       body: Scrollbar(
@@ -66,11 +68,11 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
           children: [
             SizedBox(
               height: googleMapHeight,
-              child: GoogleMapWindow(track, googleMapHeight),
+              child: GoogleMapWidget(track, googleMapHeight),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 5),
-              child: Text("Photos", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 5),
+              child: Text(t.photos, style: const TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
             ),
             Container(
               height: 100,
@@ -101,84 +103,84 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
                 },
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 5),
-              child: Text("Altitude Chart", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 5),
+              child: Text(t.altitudeChart, style: const TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
             ),
             Container(
-              height: 170,
-              margin: const EdgeInsets.only(top: 5),
+              height: 210,
+              margin: const EdgeInsets.only(top: 5, right: 15),
               child: LineChartWidget(track),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 5),
-              child: Text("Details", style: TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 5),
+              child: Text(t.details, style: const TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
             ),
             ListTile(
               leading: const Icon(Icons.play_arrow_outlined),
               title: Text(
-                "Start Time: " +
+                "${t.startTime}: " +
                     (track.startTime != null
                         ? ValueFormat()
                             .timeFormatter
                             .format(track.startTime!.toLocal())
-                        : 'unknown'),
+                        : t.unknown),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.stop_outlined),
               title: Text(
-                "End Time: " +
+                "${t.endTime}: " +
                     (track.startTime != null
                         ? ValueFormat()
                             .timeFormatter
                             .format(track.endTime!.toLocal())
-                        : 'unknown'),
+                        : t.unknown),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.route_outlined),
               title: Text(
-                "Distance: " +
+                "${t.distance}: " +
                     (track.totalDistance != -1
                         ? ValueFormat().formatDistance(track.totalDistance)
-                        : 'unknown'),
+                        : t.unknown),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.timer_outlined),
               title: Text(
-                "Duration: " +
+                "${t.duration}: " +
                     (ValueFormat().getDuration(track) != null
                         ? ValueFormat().getDuration(track)!
-                        : 'unknown'),
+                        : t.unknown),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.speed_outlined),
               title: Text(
-                "Avg Speed: " +
+                "${t.avgSpeed}: " +
                     ValueFormat().formatAndCheckSpeedValue(track.avgSpeed),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.speed_outlined),
               title: Text(
-                "Max Speed: " +
+                "${t.maxSpeed}: " +
                     ValueFormat().formatAndCheckSpeedValue(track.maxSpeed),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.arrow_downward),
               title: Text(
-                "Min Altitude: " +
+                "${t.minAltitude}: " +
                     ValueFormat().formatAltitude(track.minAltitude),
               ),
             ),
             ListTile(
               leading: const Icon(Icons.arrow_upward),
               title: Text(
-                "Max Altitude: " +
+                "${t.maxAltitude}: " +
                     ValueFormat().formatAltitude(track.maxAltitude),
               ),
             ),

@@ -4,30 +4,31 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../model/geo_position.dart';
 import '../model/track.dart';
 import '../value_format.dart';
 
-class GoogleMapWindow extends StatefulWidget {
+class GoogleMapWidget extends StatefulWidget {
   final Track track;
   final double height;
 
-  const GoogleMapWindow(this.track, this.height, {Key? key}) : super(key: key);
+  const GoogleMapWidget(this.track, this.height, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _GoogleMapWindowState();
+    return _GoogleMapWidgetState();
   }
 }
 
-class _GoogleMapWindowState extends State<GoogleMapWindow> {
+class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   late GoogleMapController mapController;
   final Set<Marker> _markers = {};
   late BitmapDescriptor _startMarkerIcon;
   late BitmapDescriptor _endMarkerIcon;
 
-  _GoogleMapWindowState();
+  _GoogleMapWidgetState();
 
   @override
   void initState() {
@@ -62,6 +63,7 @@ class _GoogleMapWindowState extends State<GoogleMapWindow> {
   }
 
   _createMarkers() {
+    var t = AppLocalizations.of(context)!;
     Track track = widget.track;
     LatLng endPos =
         LatLng(track.positions.last.latitude!, track.positions.last.longitude!);
@@ -71,7 +73,7 @@ class _GoogleMapWindowState extends State<GoogleMapWindow> {
       markerId: MarkerId(track.startTime.toString()),
       position: startPos,
       infoWindow: InfoWindow(
-        title: ('Started here at ' +
+        title: ('${t.startedHereAt} ' +
             ValueFormat().timeFormatter.format(track.startTime!.toLocal())),
       ),
       icon: _startMarkerIcon,
@@ -80,7 +82,7 @@ class _GoogleMapWindowState extends State<GoogleMapWindow> {
         markerId: MarkerId(track.endTime.toString()),
         position: endPos,
         infoWindow: InfoWindow(
-          title: ('Ended here at ' +
+          title: ('${t.endedHereAt} ' +
               ValueFormat().timeFormatter.format(track.endTime!.toLocal())),
         ),
         icon: _endMarkerIcon));
@@ -190,13 +192,11 @@ class _GoogleMapWindowState extends State<GoogleMapWindow> {
   @override
   Widget build(BuildContext context) {
     Track track = widget.track;
-    GeoPosition middlePos = track.getPositionAt(track.positions.length ~/ 2);
-    LatLng _center = LatLng(middlePos.latitude!, middlePos.longitude!);
 
     return GoogleMap(
       gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
         Factory<OneSequenceGestureRecognizer>(
-          () => EagerGestureRecognizer(),
+              () => EagerGestureRecognizer(),
         ),
       },
       polylines: _drawPolyline(),
@@ -205,5 +205,6 @@ class _GoogleMapWindowState extends State<GoogleMapWindow> {
       onMapCreated: _onMapCreated,
       initialCameraPosition: _getCameraPosition(),
     );
+
   }
 }

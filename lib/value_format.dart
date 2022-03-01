@@ -39,7 +39,7 @@ class ValueFormat {
     speedInMetersPerSec = speedInMetersPerSec * 3.6;
     String s = "";
     if (speedInMetersPerSec.isNaN || speedInMetersPerSec.isInfinite) {
-      return "unknown";
+      return s;
     } else {
       num mod = pow(10.0, 2);
       s = ((speedInMetersPerSec * mod).round().toDouble() / mod).toString();

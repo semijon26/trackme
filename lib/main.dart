@@ -6,6 +6,7 @@ import 'package:personal_tracking_app/ui/saved_page.dart';
 import 'package:personal_tracking_app/model/geo_position.dart';
 import 'package:personal_tracking_app/model/track.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
@@ -22,10 +23,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'TrackMe',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: FutureBuilder(
         future: Hive.openBox('tracks'),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -61,17 +65,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    var t = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,
         title: Text(widget.title),
         automaticallyImplyLeading: false,
-        bottom: const TabBar(
+        bottom: TabBar(
             indicatorColor: Colors.white,
-            physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             tabs: [
-              Tab(text: 'RECORD', icon: Icon(Icons.album_outlined)),
-              Tab(text: 'SAVED', icon: Icon(Icons.save)),
+              Tab(text: t.record, icon: const Icon(Icons.album_outlined)),
+              Tab(text: t.saved, icon: const Icon(Icons.save)),
             ]),
       ),
       body: TabBarView(

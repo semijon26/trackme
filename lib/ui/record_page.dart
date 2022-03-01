@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../recorder.dart';
 import '../value_format.dart';
@@ -108,11 +109,12 @@ class _RecordPageState extends State<RecordPage>
   }
 
   _showAlertDialog(BuildContext context) {
+    var t = AppLocalizations.of(context)!;
     Widget cancelButton = TextButton(
         onPressed: () {
           Navigator.pop(context);
         },
-        child: const Text("Cancel"));
+        child: Text(t.cancel));
 
     Widget confirmButton = TextButton(
         onPressed: () {
@@ -122,20 +124,20 @@ class _RecordPageState extends State<RecordPage>
           Navigator.pop(context);
           if (isSuccessful!) {
             Fluttertoast.showToast(
-                msg: "saved",
+                msg: t.savedToastMsg,
                 backgroundColor: Colors.grey.shade200,
                 textColor: Colors.indigo);
           } else {
             Fluttertoast.showToast(
-                msg: "not saved",
+                msg: t.notSavedToastMsg,
                 backgroundColor: Colors.grey.shade200,
                 textColor: Colors.indigo);
           }
         },
-        child: const Text("Stop"));
+        child: Text(t.stop));
 
     AlertDialog alert = AlertDialog(
-      title: const Text("Stop Recording?"),
+      title: Text(t.stopRecording),
       actions: [cancelButton, confirmButton],
     );
 
@@ -149,123 +151,119 @@ class _RecordPageState extends State<RecordPage>
 
   @override
   Widget build(BuildContext context) {
+    var t = AppLocalizations.of(context)!;
     return Center(
-      child: ValueListenableBuilder(
-        valueListenable: _timestamp,
-        builder: (context, n, c) {
-          return Column(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 220,
+            width: 300,
+            child: Card(
+              margin: const EdgeInsets.only(bottom: 20),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _isRecording ? recorder.latitude.toString() : '--',
+                      style: const TextStyle(
+                          fontSize: 30,
+                          color: Color.fromRGBO(132, 128, 0, 100)),
+                    ),
+                    Text(t.latitude),
+                    const Text(''),
+                    Text(
+                      _isRecording ? recorder.longitude.toString() : '--',
+                      style: const TextStyle(
+                          fontSize: 30,
+                          color: Color.fromRGBO(132, 128, 0, 100)),
+                    ),
+                    Text(t.longitude),
+                    const Text(''),
+                    Text(
+                      _isRecording
+                          ? ValueFormat().formatAltitude(recorder.altitude)
+                          : '--',
+                      style: const TextStyle(
+                          fontSize: 24,
+                          color: Color.fromRGBO(132, 128, 0, 100)),
+                    ),
+                    Text(t.altitude),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
+            children: [
               SizedBox(
-                height: 220,
-                width: 300,
+                height: 120,
+                width: 150,
                 child: Card(
-                  margin: const EdgeInsets.only(bottom: 20),
+                  margin: const EdgeInsets.only(right: 15, bottom: 20),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          _isRecording ? recorder.latitude.toString() : '--',
+                          _isRecording ? _getRecordingTime() : '--',
                           style: const TextStyle(
-                              fontSize: 30,
-                              color: Color.fromRGBO(132, 128, 0, 100)),
+                              fontSize: 24, color: Colors.indigo),
                         ),
-                        const Text('Latitude'),
-                        const Text(''),
-                        Text(
-                          _isRecording ? recorder.longitude.toString() : '--',
-                          style: const TextStyle(
-                              fontSize: 30,
-                              color: Color.fromRGBO(132, 128, 0, 100)),
-                        ),
-                        const Text('Longitude'),
-                        const Text(''),
-                        Text(
-                          _isRecording
-                              ? ValueFormat().formatAltitude(recorder.altitude)
-                              : '--',
-                          style: const TextStyle(
-                              fontSize: 24,
-                              color: Color.fromRGBO(132, 128, 0, 100)),
-                        ),
-                        const Text('Altitude'),
+                        Text(t.recordingTime),
                       ],
                     ),
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 120,
-                    width: 150,
-                    child: Card(
-                      margin: const EdgeInsets.only(right: 15, bottom: 20),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              _isRecording ? _getRecordingTime() : '--',
-                              style: const TextStyle(
-                                  fontSize: 24, color: Colors.indigo),
-                            ),
-                            const Text('Recording Time'),
-                          ],
+              SizedBox(
+                height: 120,
+                width: 150,
+                child: Card(
+                  margin: const EdgeInsets.only(left: 15, bottom: 20),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          _isRecording
+                              ? ValueFormat()
+                              .formatAndCheckSpeedValue(recorder.speed)
+                              : '--',
+                          style: const TextStyle(
+                              fontSize: 24, color: Colors.indigo),
                         ),
-                      ),
+                        Text(t.speed),
+                      ],
                     ),
                   ),
-                  SizedBox(
-                    height: 120,
-                    width: 150,
-                    child: Card(
-                      margin: const EdgeInsets.only(left: 15, bottom: 20),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              _isRecording
-                                  ? ValueFormat()
-                                      .formatAndCheckSpeedValue(recorder.speed)
-                                  : '--',
-                              style: const TextStyle(
-                                  fontSize: 24, color: Colors.indigo),
-                            ),
-                            const Text('Speed'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: const Size(300, 120),
-                    primary: _getStartStopButtonColor(),
-                  ),
-                  onPressed: _switchRecordingStatus,
-                  child: _getStartStopButtonIcon(),
                 ),
-              ),
-              ElevatedButton(
-                  style: _getPhotoButtonStyle(),
-                  onPressed: _isRecording ? _takePhoto : () {},
-                  child: const Icon(
-                    Icons.add_a_photo,
-                    color: Colors.white,
-                    size: 30,
-                  )),
+              )
             ],
-          );
-        },
-      ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                fixedSize: const Size(300, 120),
+                primary: _getStartStopButtonColor(),
+              ),
+              onPressed: _switchRecordingStatus,
+              child: _getStartStopButtonIcon(),
+            ),
+          ),
+          ElevatedButton(
+              style: _getPhotoButtonStyle(),
+              onPressed: _isRecording ? _takePhoto : () {},
+              child: const Icon(
+                Icons.add_a_photo,
+                color: Colors.white,
+                size: 30,
+              )),
+        ],
+      )
     );
   }
 
