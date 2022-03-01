@@ -25,7 +25,6 @@ class _RecordPageState extends State<RecordPage>
   DateTime? _startButtonTimestamp;
   late Timer _timer;
   late bool _isRecording;
-  late var _timestamp;
   String _fullPath = "";
 
   @override
@@ -37,7 +36,6 @@ class _RecordPageState extends State<RecordPage>
       setState(() {});
     });
     _isRecording = recorder.isRecording;
-    _timestamp = ValueNotifier(recorder.timestamp);
     super.initState();
   }
 

@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 import 'model/track.dart';
 
 class ValueFormat {
-  DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
-  DateFormat timeFormatter = DateFormat('h:mm a');
+  DateFormat dateFormatter = DateFormat('dd.MM.yyyy');
+  DateFormat timeFormatter = DateFormat('H:mm');
 
   String? getDuration(Track track) {
     DateTime? dtStart = track.startTime;

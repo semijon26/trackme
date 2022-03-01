@@ -124,12 +124,31 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   List<LatLng> _getLatLngList() {
-    var positions = <LatLng>[];
-    GeoPosition pos1 = widget.track.positions.first;
-    GeoPosition pos2 = widget.track.positions.last;
-    positions.add(LatLng(pos1.latitude!, pos1.longitude!));
-    positions.add(LatLng(pos2.latitude!, pos2.longitude!));
-    return positions;
+    var allPos = widget.track.positions;
+    var list = <LatLng>[];
+    if (allPos.length < 30) {
+      for (GeoPosition p in allPos) {
+        list.add(LatLng(p.latitude!, p.longitude!));
+      }
+    } else {
+      double divider = (allPos.length / 20);
+      if (kDebugMode) {
+        print ("Divider" + divider.toStringAsFixed(5));
+      }
+      for (int i = 0; i < 19; i++) {
+        int index = (i*divider).truncate();
+        GeoPosition p = allPos.elementAt(index);
+        list.add(LatLng(p.latitude!, p.longitude!));
+        if (kDebugMode) {
+          print("Position bei $index");
+        }
+      }
+      list.add(LatLng(allPos.last.latitude!, allPos.last.longitude!));
+      if (kDebugMode) {
+        print("Position bei ${allPos.indexOf(allPos.last)}");
+      }
+    }
+    return list;
   }
 
   LatLngBounds _getLatLngBounds (List<LatLng> list) {
@@ -191,8 +210,6 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Track track = widget.track;
-
     return GoogleMap(
       gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
         Factory<OneSequenceGestureRecognizer>(
