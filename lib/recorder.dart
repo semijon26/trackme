@@ -16,23 +16,27 @@ class Recorder {
   double _altitude = 0;
   DateTime? _timestamp;
   Track? track;
+  //late BuildContext _context;
 
   StreamSubscription<Position>? positionStream;
   late LocationSettings locationSettings;
 
-  Recorder() {
+  Recorder(/*BuildContext context*/) {
     locationSettings = _getLocationSettings();
+    //_context = context;
   }
 
   LocationSettings _getLocationSettings() {
-    //var t = AppLocalizations.of(context);
+    //var t = AppLocalizations.of(_context)!;
     if (defaultTargetPlatform == TargetPlatform.android) {
       return AndroidSettings(
         accuracy: LocationAccuracy.best,
         distanceFilter: 5,
         foregroundNotificationConfig: ForegroundNotificationConfig(
-            notificationTitle: "Running in Background",
-            notificationText: "TrackMe will continue to receive your location even when you aren't using it",
+            //notificationTitle: t.runningInBackground,
+            //notificationText: t.trackMeWillContinueReceiveLocation,
+            notificationTitle: "Die App läuft im Hintergrund weiter",
+            notificationText: "TrackMe wird weiterhin deine Position ermitteln, auch wenn die App im Hintergrund ist",
           enableWakeLock: true,),
       );
     } else if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) {

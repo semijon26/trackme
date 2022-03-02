@@ -40,5 +40,7 @@
   "submitTrackName": "Namen für Track eingeben",
   "enterATrackName": "Gebe deinem aufgezeichneten Track einen Namen",
   "submit": "Bestätigen",
-  "from": "Vom"
+  "from": "Vom",
+  "runningInBackground": "Die App läuft im Hintergrund weiter",
+  "trackMeWillContinueReceiveLocation": "TrackMe wird weiterhin deine Position ermitteln, auch wenn die App im Hintergrund ist"
 }

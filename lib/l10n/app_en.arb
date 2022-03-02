@@ -40,5 +40,8 @@
   "submitTrackName": "Submit Track Name",
   "enterATrackName": "Enter a Name for your Track",
   "submit": "Submit",
-  "from": "From"
+  "from": "From",
+  "runningInBackground": "Running in Background",
+  "trackMeWillContinueReceiveLocation": "TrackMe will continue to receive your location even when you aren't using it"
+
 }

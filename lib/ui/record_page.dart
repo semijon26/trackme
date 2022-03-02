@@ -22,6 +22,7 @@ class RecordPage extends StatefulWidget {
 
 class _RecordPageState extends State<RecordPage>
     with AutomaticKeepAliveClientMixin<RecordPage> {
+  //late Recorder recorder;
   Recorder recorder = Recorder();
   DateTime? _startButtonTimestamp;
   late Timer _timer;
@@ -30,10 +31,8 @@ class _RecordPageState extends State<RecordPage>
   late TextEditingController controller;
 
   @override
-  bool get wantKeepAlive => true;
-
-  @override
   void initState() {
+    //recorder = Recorder(context);
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {});
     });
@@ -313,4 +312,7 @@ class _RecordPageState extends State<RecordPage>
   }
 
   String get fullPath => _fullPath;
+
+  @override
+  bool get wantKeepAlive => true;
 }
