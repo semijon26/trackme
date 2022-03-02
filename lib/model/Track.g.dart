@@ -25,13 +25,14 @@ class TrackAdapter extends TypeAdapter<Track> {
       .._totalDistance = fields[5] as int
       .._photos = (fields[6] as List).cast<String>()
       .._minAltitude = fields[7] as double
-      .._maxAltitude = fields[8] as double;
+      .._maxAltitude = fields[8] as double
+      ..name = fields[9] as String?;
   }
 
   @override
   void write(BinaryWriter writer, Track obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.startTime)
       ..writeByte(1)
@@ -49,7 +50,9 @@ class TrackAdapter extends TypeAdapter<Track> {
       ..writeByte(7)
       ..write(obj._minAltitude)
       ..writeByte(8)
-      ..write(obj._maxAltitude);
+      ..write(obj._maxAltitude)
+      ..writeByte(9)
+      ..write(obj.name);
   }
 
   @override

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart' as pv;
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -125,8 +126,10 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
         body: Container(
             color: Colors.black,
             child: pv.PhotoView(
+              minScale: PhotoViewComputedScale.contained * 0.8,
+              maxScale: PhotoViewComputedScale.covered * 4,
               imageProvider: FileImage(File(widget.photoPath)),
-              /*loadingBuilder: (context, event) => Center(
+              loadingBuilder: (context, event) => Center(
                 child: SizedBox(
                   width: 20.0,
                   height: 20.0,
@@ -137,7 +140,7 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
                             event.expectedTotalBytes!,
                   ),
                 ),
-              ),*/
+              ),
             )));
   }
 }

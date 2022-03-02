@@ -35,5 +35,10 @@
   "deletePhotoQuestion": "Foto löschen?",
   "deletedToastMsg": "gelöscht",
   "couldntDeleteToastMsg": "konnte nicht gelöscht werden",
-  "couldntSaveToastMsg": "konnte nicht gespeichert werden"
+  "couldntSaveToastMsg": "konnte nicht gespeichert werden",
+  "unnamedTrack": "unbenannter Track",
+  "submitTrackName": "Namen für Track eingeben",
+  "enterATrackName": "Gebe deinem aufgezeichneten Track einen Namen",
+  "submit": "Bestätigen",
+  "from": "Vom"
 }

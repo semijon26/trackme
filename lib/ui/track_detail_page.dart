@@ -50,14 +50,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
               onPressed: () => _shareTrack(context, track),
               icon: const Icon(Icons.ios_share))
         ],
-        title: Text(
-          '${t.trackFrom} ' +
-              (track.startTime != null
-                  ? ValueFormat()
-                      .dateFormatter
-                      .format(track.startTime!.toLocal())
-                  : t.unknown),
-        ),
+        title: Text(track.name != null ? track.name! : t.unknown),
       ),
       body: Scrollbar(
         interactive: true,
@@ -118,8 +111,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
             ),
             ListTile(
               leading: const Icon(Icons.play_arrow_outlined),
-              title: Text(
-                "${t.startTime}: " +
+              title: Text("${t.startTime}: " +
                     (track.startTime != null
                         ? ValueFormat()
                             .timeFormatter
@@ -129,8 +121,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
             ),
             ListTile(
               leading: const Icon(Icons.stop_outlined),
-              title: Text(
-                "${t.endTime}: " +
+              title: Text("${t.endTime}: " +
                     (track.startTime != null
                         ? ValueFormat()
                             .timeFormatter

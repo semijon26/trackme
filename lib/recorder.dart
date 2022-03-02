@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:personal_tracking_app/model/geo_position.dart';
 import 'package:personal_tracking_app/model/track.dart';
+import 'package:personal_tracking_app/value_format.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Recorder {
   bool isRecording = false;
@@ -16,11 +19,36 @@ class Recorder {
   Track? track;
 
   StreamSubscription<Position>? positionStream;
+  late LocationSettings locationSettings;
 
-  static LocationSettings locationSettings = const LocationSettings(
-    accuracy: LocationAccuracy.best,
-    distanceFilter: 2,
-  );
+  Recorder() {
+    locationSettings = _getLocationSettings();
+  }
+
+  LocationSettings _getLocationSettings() {
+    //var t = AppLocalizations.of(context);
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return AndroidSettings(
+        accuracy: LocationAccuracy.best,
+        distanceFilter: 5,
+        foregroundNotificationConfig: ForegroundNotificationConfig(
+            notificationTitle: "Running in Background",
+            notificationText: "TrackMe will continue to receive your location even when you aren't using it",
+          enableWakeLock: true,),
+      );
+    } else if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) {
+      return AppleSettings(
+        accuracy: LocationAccuracy.best,
+        activityType: ActivityType.fitness,
+        distanceFilter: 5,
+        pauseLocationUpdatesAutomatically: false,
+        showBackgroundLocationIndicator: true);
+    } else {
+      return const LocationSettings(
+        accuracy: LocationAccuracy.best,
+        distanceFilter: 5);
+    }
+  }
 
   Future<void> _updatePosition() async {
     bool serviceEnabled;

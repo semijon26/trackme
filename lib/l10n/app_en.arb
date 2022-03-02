@@ -35,5 +35,10 @@
   "deletePhotoQuestion": "Delete Photo?",
   "deletedToastMsg": "deleted",
   "couldntDeleteToastMsg": "could not delete",
-  "couldntSaveToastMsg": "could not save"
+  "couldntSaveToastMsg": "could not save",
+  "unnamedTrack": "Unnamed Track",
+  "submitTrackName": "Submit Track Name",
+  "enterATrackName": "Enter a Name for your Track",
+  "submit": "Submit",
+  "from": "From"
 }

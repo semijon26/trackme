@@ -62,6 +62,7 @@ class _SavedPageState extends State<SavedPage>
             itemCount: tracks.length,
             itemBuilder: (context, index) {
               final track = tracks.getAt(index) as Track;
+              print(track.name);
               return Card(
                   child: Slidable(
                     closeOnScroll: true,
@@ -81,56 +82,77 @@ class _SavedPageState extends State<SavedPage>
                       ],
                     ),
                     child: ListTile(
+                      isThreeLine: true,
                       title: Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Text(
-                          t.trackFrom + " " +
-                              (track.startTime != null
-                                  ? ValueFormat()
-                                  .dateFormatter
-                                  .format(track.startTime!.toLocal())
-                                  : t.unknown),
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          track.name != null ? track.name! : t.unknown,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18),
                         ),
                       ),
-                      minVerticalPadding: 10,
+                      minVerticalPadding: 0,
                       contentPadding: const EdgeInsets.only(
                           left: 16, right: 16, top: 7, bottom: 7),
-                      subtitle: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      subtitle: Column(
+                        //crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Column(
-                            children: [
-                              const Icon(Icons.play_arrow_outlined),
-                              Text(track.startTime != null
-                                  ? ValueFormat()
-                                  .timeFormatter
-                                  .format(track.startTime!.toLocal())
-                                  : t.unknown),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("${t.from} ${ValueFormat().dateFormatter.format(track.startTime!)}"),
+                              ],
+                            ),
                           ),
-                          Column(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              const Icon(Icons.stop_outlined),
-                              Text(track.endTime != null
-                                  ? ValueFormat()
-                                  .timeFormatter
-                                  .format(track.endTime!.toLocal())
-                                  : t.unknown),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              const Icon(Icons.route_outlined),
-                              Text(track.totalDistance != -1
-                                      ? ValueFormat().formatDistance(track.totalDistance)
-                                      : t.unknown)
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Icon(Icons.speed),
-                              Text(ValueFormat().formatAndCheckSpeedValue(track.avgSpeed)),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 35),
+                                child: Column(
+                                  children: [
+                                    const Icon(Icons.play_arrow_outlined),
+                                    Text(track.startTime != null
+                                        ? ValueFormat()
+                                        .timeFormatter
+                                        .format(track.startTime!.toLocal())
+                                        : t.unknown),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 35),
+                                child: Column(
+                                  children: [
+                                    const Icon(Icons.stop_outlined),
+                                    Text(track.endTime != null
+                                        ? ValueFormat()
+                                        .timeFormatter
+                                        .format(track.endTime!.toLocal())
+                                        : t.unknown),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 35),
+                                child: Column(
+                                  children: [
+                                    const Icon(Icons.route_outlined),
+                                    Text(track.totalDistance != -1
+                                        ? ValueFormat().formatDistance(track.totalDistance)
+                                        : t.unknown)
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                children: [
+                                  const Icon(Icons.speed),
+                                  Text(ValueFormat().formatAndCheckSpeedValue(track.avgSpeed)),
+                                ],
+                              ),
                             ],
                           ),
                         ],

@@ -39,6 +39,9 @@ class Track extends HiveObject {
   @HiveField(8)
   double _maxAltitude = 0;
 
+  @HiveField(9)
+  String? name;
+
   bool isValidTrack () {
     if (positions.isNotEmpty) {
       return true;
