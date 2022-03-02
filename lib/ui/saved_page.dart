@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -22,18 +21,18 @@ class _SavedPageState extends State<SavedPage>
   bool get wantKeepAlive => true;
 
   // Funktioniert nicht------------------------
-  _showAlertDialog(context, Track track) {
+  _showAlertDialog(Track track) {
     var t = AppLocalizations.of(context)!;
     Widget cancelButton = TextButton(
         onPressed: () {
-          Navigator.pop(context);
+          Navigator.of(context).pop();
         },
         child: Text(t.cancel));
 
     Widget confirmButton = TextButton(
         onPressed: () {
           track.removeWithPhotos();
-          Navigator.pop(context);
+          Navigator.of(context).pop();
         },
         child: Text(t.delete));
 
@@ -62,7 +61,6 @@ class _SavedPageState extends State<SavedPage>
             itemCount: tracks.length,
             itemBuilder: (context, index) {
               final track = tracks.getAt(index) as Track;
-              print(track.name);
               return Card(
                   child: Slidable(
                     closeOnScroll: true,
@@ -72,8 +70,8 @@ class _SavedPageState extends State<SavedPage>
                       motion: const DrawerMotion(),
                       children: [
                         SlidableAction(
-                          //onPressed: (context){_showAlertDialog(context, track);},
-                          onPressed: (context) {track.delete();},
+                          onPressed: (context) => _showAlertDialog(track),
+                          //onPressed: (context) {track.delete();},
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
                           icon: Icons.delete,
@@ -96,7 +94,6 @@ class _SavedPageState extends State<SavedPage>
                       contentPadding: const EdgeInsets.only(
                           left: 16, right: 16, top: 7, bottom: 7),
                       subtitle: Column(
-                        //crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),

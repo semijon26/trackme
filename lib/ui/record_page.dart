@@ -80,7 +80,6 @@ class _RecordPageState extends State<RecordPage>
           if (isSuccessful!) {
               var name = await _enterNameDialog();
               if (name == "") {
-                print("name ist "" und nicht null");
                 name = null;
               }
               name != null ? recorder.track?.name = name
