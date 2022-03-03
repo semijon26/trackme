@@ -17,8 +17,16 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>LocationAlwaysWhenInUsage</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>LocationAlwaysWhenInUsage</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+    <string>LocationAlways</string>
 	<key>CFBundleName</key>
 	<string>TrackMe</string>
+	<key>NSCameraUsageDescription</key>
+    <string>Permission to take Photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>PhotoLibrary</string>
 	<key>CFBundlePackageType</key>

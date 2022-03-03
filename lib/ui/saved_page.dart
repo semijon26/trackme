@@ -98,7 +98,7 @@ class _SavedPageState extends State<SavedPage>
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Text("${t.from} ${ValueFormat().dateFormatter.format(track.startTime!)}"),
+                                Text(track.startTime!= null ? "${t.from} ${ValueFormat().dateFormatter.format(track.startTime!)}" : t.unknown),
                               ],
                             ),
                           ),

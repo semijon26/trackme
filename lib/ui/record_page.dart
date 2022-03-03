@@ -158,7 +158,7 @@ class _RecordPageState extends State<RecordPage>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            _isRecording ? recorder.latitude.toString() : '--',
+                            _isRecording ? recorder.latitude.toString().characters.take(12).string : '--',
                             style: const TextStyle(
                                 fontSize: 30,
                                 color: Color.fromRGBO(132, 128, 0, 100)),
@@ -166,7 +166,7 @@ class _RecordPageState extends State<RecordPage>
                           Text(t.latitude),
                           const Text(''),
                           Text(
-                            _isRecording ? recorder.longitude.toString() : '--',
+                            _isRecording ? recorder.longitude.toString().characters.take(12).string : '--',
                             style: const TextStyle(
                                 fontSize: 30,
                                 color: Color.fromRGBO(132, 128, 0, 100)),
