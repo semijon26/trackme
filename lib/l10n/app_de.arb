@@ -42,5 +42,6 @@
   "submit": "Bestätigen",
   "from": "Vom",
   "runningInBackground": "Die App läuft im Hintergrund weiter",
-  "trackMeWillContinueReceiveLocation": "TrackMe wird weiterhin deine Position ermitteln, auch wenn die App im Hintergrund ist"
+  "trackMeWillContinueReceiveLocation": "TrackMe wird weiterhin deine Position ermitteln, auch wenn die App im Hintergrund ist",
+  "submitNewTrackName": "Neuen Namen für Track eingeben"
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:personal_tracking_app/ui/google_map_widget.dart';
 import 'package:personal_tracking_app/ui/line_chart_widget.dart';
 import 'package:personal_tracking_app/ui/photo_fullscreen.dart';
@@ -25,6 +26,20 @@ class TrackDetailPage extends StatefulWidget {
 
 class _TrackDetailPageState extends State<TrackDetailPage> {
 
+  late TextEditingController controller;
+
+  @override
+  void initState() {
+    controller = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   Future<void> _shareTrack(BuildContext context, Track track) async {
     GpxExport _gpxExport = GpxExport(track);
     RenderBox? box = context.findRenderObject() as RenderBox;
@@ -36,6 +51,45 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
+  _changeName(Track track) async {
+    var name = await _changeNameDialog(track);
+    if (name == "") {
+      name = null;
+    }
+    name != null ? track.name = name
+        : track.name = track.name;
+    track.save();
+    setState(() => {});
+  }
+
+  Future<String?> _changeNameDialog(Track track) {
+    var t = AppLocalizations.of(context)!;
+
+    submit() {
+      Navigator.of(context).pop(controller.text);
+      controller.clear();
+    }
+
+    return showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(t.submitNewTrackName),
+        content: TextField(
+          autofocus: true,
+          decoration: InputDecoration(hintText: track.name != null ? track.name! : t.unknown),
+          controller: controller,
+          onSubmitted: (_) => submit(),
+        ),
+        actions: [
+          TextButton(
+            child: Text(t.submit),
+            onPressed: submit,
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var t = AppLocalizations.of(context)!;
@@ -45,12 +99,15 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo,
-        actions: [
-          IconButton(
-              onPressed: () => _shareTrack(context, track),
-              icon: const Icon(Icons.ios_share))
-        ],
-        title: Text(track.name != null ? track.name! : t.unknown),
+          actions: [
+            IconButton(
+                onPressed: () => _changeName(track),
+                icon: const Icon(Icons.edit)),
+            IconButton(
+                onPressed: () => _shareTrack(context, track),
+                icon: const Icon(Icons.ios_share))
+          ],
+          title: Text(track.name != null ? track.name! : t.unknown)
       ),
       body: Scrollbar(
         interactive: true,
@@ -65,14 +122,19 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20, bottom: 5),
-              child: Text(t.photos, style: const TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
+              child: Text(t.photos,
+                  style: const TextStyle(
+                      color: Colors.indigo,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
             ),
             Container(
               height: 100,
               margin: const EdgeInsets.only(top: 5),
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
                 itemCount: track.photos.length,
                 itemBuilder: (context, index) {
                   final photo = track.photos.elementAt(index);
@@ -83,9 +145,10 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PhotoFullscreen(widget.track, photo)))
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          PhotoFullscreen(widget.track, photo)))
                               .then((value) => setState(() {}));
                         },
                         child: Image.file(
@@ -98,7 +161,11 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20, bottom: 5),
-              child: Text(t.altitudeChart, style: const TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
+              child: Text(t.altitudeChart,
+                  style: const TextStyle(
+                      color: Colors.indigo,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
             ),
             Container(
               height: 210,
@@ -107,11 +174,16 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 20, bottom: 5),
-              child: Text(t.details, style: const TextStyle(color: Colors.indigo, fontSize: 18, fontWeight: FontWeight.bold)),
+              child: Text(t.details,
+                  style: const TextStyle(
+                      color: Colors.indigo,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
             ),
             ListTile(
               leading: const Icon(Icons.play_arrow_outlined),
-              title: Text("${t.startTime}: " +
+              title: Text(
+                "${t.startTime}: " +
                     (track.startTime != null
                         ? ValueFormat()
                             .timeFormatter
@@ -121,7 +193,8 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
             ),
             ListTile(
               leading: const Icon(Icons.stop_outlined),
-              title: Text("${t.endTime}: " +
+              title: Text(
+                "${t.endTime}: " +
                     (track.startTime != null
                         ? ValueFormat()
                             .timeFormatter

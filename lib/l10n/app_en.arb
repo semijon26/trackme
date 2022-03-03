@@ -42,6 +42,6 @@
   "submit": "Submit",
   "from": "From",
   "runningInBackground": "Running in Background",
-  "trackMeWillContinueReceiveLocation": "TrackMe will continue to receive your location even when you aren't using it"
-
+  "trackMeWillContinueReceiveLocation": "TrackMe will continue to receive your location even when you aren't using it",
+  "submitNewTrackName": "Submit new Track Name"
 }

@@ -259,7 +259,6 @@ class _RecordPageState extends State<RecordPage>
         ),
       ),
     );
-
   }
 
   ButtonStyle _getPhotoButtonStyle() {
@@ -289,7 +288,6 @@ class _RecordPageState extends State<RecordPage>
   }
 
   void _takePhoto() async {
-    print('taking photo');
     final image = await ImagePicker().pickImage(source: ImageSource.camera);
     if (image == null) return;
 

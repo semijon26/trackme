@@ -20,7 +20,6 @@ class _SavedPageState extends State<SavedPage>
   @override
   bool get wantKeepAlive => true;
 
-  // Funktioniert nicht------------------------
   _showAlertDialog(Track track) {
     var t = AppLocalizations.of(context)!;
     Widget cancelButton = TextButton(
@@ -71,7 +70,6 @@ class _SavedPageState extends State<SavedPage>
                       children: [
                         SlidableAction(
                           onPressed: (context) => _showAlertDialog(track),
-                          //onPressed: (context) {track.delete();},
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
                           icon: Icons.delete,
