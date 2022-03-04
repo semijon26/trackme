@@ -30,8 +30,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   final Set<Marker> _markers = {};
   late BitmapDescriptor _startMarkerIcon;
   late BitmapDescriptor _endMarkerIcon;
-
-  _GoogleMapWidgetState();
+  var _maptype = MapType.normal;
 
   @override
   void initState() {
@@ -93,8 +92,10 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   void setCustomMarkerIcon() async {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
-      _startMarkerIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
-      _endMarkerIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+      _startMarkerIcon =
+          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
+      _endMarkerIcon =
+          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
     } else {
       _startMarkerIcon = await BitmapDescriptor.fromAssetImage(
           const ImageConfiguration(), 'assets/markers/startMarker.png');
@@ -114,7 +115,8 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       );
     } else {
       return CameraPosition(
-        target: LatLng(widget.track.positions.first.latitude!, widget.track.positions.first.longitude!),
+        target: LatLng(widget.track.positions.first.latitude!,
+            widget.track.positions.first.longitude!),
         zoom: 14,
       );
     }
@@ -122,7 +124,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   LatLng? _getCenter() {
     List<LatLng> positions = _getLatLngList();
-    if(positions.isNotEmpty) {
+    if (positions.isNotEmpty) {
       var bounds = _getLatLngBounds(positions);
       return LatLng((bounds.northeast.latitude + bounds.southwest.latitude) / 2,
           (bounds.northeast.longitude + bounds.southwest.longitude) / 2);
@@ -141,10 +143,10 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     } else {
       double divider = (allPos.length / 20);
       if (kDebugMode) {
-        print ("Divider" + divider.toStringAsFixed(5));
+        print("Divider" + divider.toStringAsFixed(5));
       }
       for (int i = 0; i < 19; i++) {
-        int index = (i*divider).truncate();
+        int index = (i * divider).truncate();
         GeoPosition p = allPos.elementAt(index);
         list.add(LatLng(p.latitude!, p.longitude!));
         if (kDebugMode) {
@@ -159,7 +161,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     return list;
   }
 
-  LatLngBounds _getLatLngBounds (List<LatLng> list) {
+  LatLngBounds _getLatLngBounds(List<LatLng> list) {
     assert(list.isNotEmpty);
     double? x0, x1, y0, y1;
     for (var latLng in list) {
@@ -174,7 +176,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
       }
     }
     return LatLngBounds(
-      southwest: LatLng(x0!, y0!), northeast: LatLng(x1!, y1!));
+        southwest: LatLng(x0!, y0!), northeast: LatLng(x1!, y1!));
   }
 
   double _getBoundsZoomLevel(List<LatLng> positions, Size mapDimensions) {
@@ -185,7 +187,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
     var mapMargin = 100;
     var totalMapDimension =
-    Size(mapDimensions.width + mapMargin, mapDimensions.height + mapMargin);
+        Size(mapDimensions.width + mapMargin, mapDimensions.height + mapMargin);
 
     double latRad(lat) {
       var sinValue = sin(lat * pi / 180);
@@ -206,9 +208,9 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
 
     var latZoom =
-    zoom(mapDimensions.height, totalMapDimension.height, latFraction);
+        zoom(mapDimensions.height, totalMapDimension.height, latFraction);
     var lngZoom =
-    zoom(mapDimensions.width, totalMapDimension.width, lngFraction);
+        zoom(mapDimensions.width, totalMapDimension.width, lngFraction);
 
     if (latZoom < 0) return lngZoom;
     if (lngZoom < 0) return latZoom;
@@ -218,18 +220,44 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return GoogleMap(
-      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-        Factory<OneSequenceGestureRecognizer>(
+    return Scaffold(
+      body: GoogleMap(
+          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+            Factory<OneSequenceGestureRecognizer>(
               () => EagerGestureRecognizer(),
+            ),
+          },
+          polylines: _drawPolyline(),
+          markers: _markers,
+          compassEnabled: true,
+          onMapCreated: _onMapCreated,
+          myLocationButtonEnabled: false,
+          initialCameraPosition: _getCameraPosition(),
+          mapType: _maptype,
         ),
-      },
-      polylines: _drawPolyline(),
-      markers: _markers,
-      compassEnabled: true,
-      onMapCreated: _onMapCreated,
-      initialCameraPosition: _getCameraPosition(),
-    );
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(top: 10),
+        width: 50,
+        height: 50,
+        child: FloatingActionButton(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.indigo,
+            child: const Icon(Icons.map),
+            onPressed: () {
+              setState(() {
+                if (_maptype == MapType.normal) {
+                  _maptype = MapType.hybrid;
+                } else if (_maptype == MapType.hybrid) {
+                  _maptype = MapType.satellite;
+                } else {
+                  _maptype = MapType.normal;
+                }
+              });
+            }
+        ),
+      )
 
+    );
   }
 }
