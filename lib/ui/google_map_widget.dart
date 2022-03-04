@@ -1,11 +1,8 @@
 import 'dart:math';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -30,7 +27,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   final Set<Marker> _markers = {};
   late BitmapDescriptor _startMarkerIcon;
   late BitmapDescriptor _endMarkerIcon;
-  var _maptype = MapType.normal;
+  var _mapType = MapType.normal;
 
   @override
   void initState() {
@@ -233,7 +230,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
           onMapCreated: _onMapCreated,
           myLocationButtonEnabled: false,
           initialCameraPosition: _getCameraPosition(),
-          mapType: _maptype,
+          mapType: _mapType,
         ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
       floatingActionButton: Container(
@@ -246,12 +243,12 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
             child: const Icon(Icons.map),
             onPressed: () {
               setState(() {
-                if (_maptype == MapType.normal) {
-                  _maptype = MapType.hybrid;
-                } else if (_maptype == MapType.hybrid) {
-                  _maptype = MapType.satellite;
+                if (_mapType == MapType.normal) {
+                  _mapType = MapType.hybrid;
+                } else if (_mapType == MapType.hybrid) {
+                  _mapType = MapType.satellite;
                 } else {
-                  _maptype = MapType.normal;
+                  _mapType = MapType.normal;
                 }
               });
             }
