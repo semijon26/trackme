@@ -1,8 +1,11 @@
 import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -89,10 +92,15 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   }
 
   void setCustomMarkerIcon() async {
-    _startMarkerIcon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), 'assets/markers/startMarker.png');
-    _endMarkerIcon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), 'assets/markers/endMarker.png');
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      _startMarkerIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
+      _endMarkerIcon = BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+    } else {
+      _startMarkerIcon = await BitmapDescriptor.fromAssetImage(
+          const ImageConfiguration(), 'assets/markers/startMarker.png');
+      _endMarkerIcon = await BitmapDescriptor.fromAssetImage(
+          const ImageConfiguration(), 'assets/markers/endMarker.png');
+    }
   }
 
   CameraPosition _getCameraPosition() {

@@ -120,45 +120,47 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
               height: googleMapHeight,
               child: GoogleMapWidget(track, googleMapHeight),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 20, bottom: 5),
-              child: Text(t.photos,
-                  style: const TextStyle(
-                      color: Colors.indigo,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold)),
-            ),
-            Container(
-              height: 100,
-              margin: const EdgeInsets.only(top: 5),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-                itemCount: track.photos.length,
-                itemBuilder: (context, index) {
-                  final photo = track.photos.elementAt(index);
-                  return Container(
-                      margin: const EdgeInsets.all(1),
-                      width: 100,
-                      height: 100,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          PhotoFullscreen(widget.track, photo)))
-                              .then((value) => setState(() {}));
-                        },
-                        child: Image.file(
-                          File(photo),
-                          fit: BoxFit.cover,
-                        ),
-                      ));
-                },
+            if(track.photos.isNotEmpty) ...[
+              Padding(
+                padding: const EdgeInsets.only(top: 20, bottom: 5),
+                child: Text(t.photos,
+                    style: const TextStyle(
+                        color: Colors.indigo,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold)),
               ),
-            ),
+              Container(
+                height: 100,
+                margin: const EdgeInsets.only(top: 5),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  itemCount: track.photos.length,
+                  itemBuilder: (context, index) {
+                    final photo = track.photos.elementAt(index);
+                    return Container(
+                        margin: const EdgeInsets.all(1),
+                        width: 100,
+                        height: 100,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PhotoFullscreen(widget.track, photo)))
+                                .then((value) => setState(() {}));
+                          },
+                          child: Image.file(
+                            File(photo),
+                            fit: BoxFit.cover,
+                          ),
+                        ));
+                  },
+                ),
+              ),
+            ],
             Padding(
               padding: const EdgeInsets.only(top: 20, bottom: 5),
               child: Text(t.altitudeChart,

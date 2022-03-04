@@ -80,17 +80,17 @@ class Recorder {
             .listen((Position pos) {
       _latitude = pos.latitude;
       _longitude = pos.longitude;
-      _speed = pos.speed;
+      _speed = pos.speed == -1 ? 0 : pos.speed;
       _altitude = pos.altitude;
       _timestamp = pos.timestamp;
       if (kDebugMode) {
-        print(_latitude.toString() +
+        print(pos.latitude.toString() +
           ' - ' +
-          _longitude.toString() +
+          pos.longitude.toString() +
           ' - ' +
-          _speed.toString() +
+          pos.speed.toString() +
           ' - ' +
-          _altitude.toString());
+          pos.altitude.toString());
       }
       track?.startTime ??= pos.timestamp;
       GeoPosition newPos = GeoPosition.fromPosition(

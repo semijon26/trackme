@@ -17,12 +17,10 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>LocationAlwaysWhenInUsage</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>LocationAlwaysWhenInUsage</string>
+    <string>Needed to access location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-    <string>LocationAlways</string>
+    <string>Needed to access location</string>
 	<key>CFBundleName</key>
 	<string>TrackMe</string>
 	<key>NSCameraUsageDescription</key>
