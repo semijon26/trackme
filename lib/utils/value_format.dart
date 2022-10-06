@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:intl/intl.dart';
 
-import 'model/track.dart';
+import '../model/track.dart';
 
 class ValueFormat {
   DateFormat dateFormatter = DateFormat('dd.MM.yyyy');

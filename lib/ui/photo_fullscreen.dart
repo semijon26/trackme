@@ -24,7 +24,6 @@ class PhotoFullscreen extends StatefulWidget {
 }
 
 class _PhotoFullscreenState extends State<PhotoFullscreen> {
-
   _showAlertDialog(BuildContext context) {
     var t = AppLocalizations.of(context)!;
     Widget cancelButton = TextButton(
@@ -95,8 +94,6 @@ class _PhotoFullscreenState extends State<PhotoFullscreen> {
         subject: "Track Photo",
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
-
-
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:personal_tracking_app/ui/record_page.dart';
@@ -22,62 +20,33 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
-    /*if (Platform.isIOS) {
-      return CupertinoApp(
-        debugShowCheckedModeBanner: true,
-        title: 'TrackMe',
-        theme: CupertinoThemeData(
-          primaryColor: Colors.indigo,
-        ),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: FutureBuilder(
-          future: Hive.openBox('tracks'),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              } else {
-                return MyHomePage(title: 'TrackMe');
-              }
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'TrackMe',
+      theme: ThemeData(
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.indigo)),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: FutureBuilder(
+        future: Hive.openBox('tracks'),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
             } else {
-              return const Scaffold();
+              return const DefaultTabController(
+                length: 2,
+                child: MyHomePage(title: 'TrackMe'),
+              );
             }
-          },
-        ),
-      );
-    } else {*/
-      return MaterialApp(
-        debugShowCheckedModeBanner: true,
-        title: 'TrackMe',
-        theme: ThemeData(
-          primarySwatch: Colors.indigo,
-        ),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: FutureBuilder(
-          future: Hive.openBox('tracks'),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              } else {
-                return const DefaultTabController(
-                  length: 2,
-                  child: MyHomePage(title: 'TrackMe'),
-                );
-              }
-            } else {
-              return const Scaffold();
-            }
-          },
-        ),
-      );
-   // }
+          } else {
+            return const Scaffold();
+          }
+        },
+      ),
+    );
   }
 }
 
@@ -96,58 +65,27 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     var t = AppLocalizations.of(context)!;
-
-    /*if(Platform.isIOS) {
-      return CupertinoTabScaffold(
-          tabBar: CupertinoTabBar(
-              items: [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.album_outlined),
-                label: t.record),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.save),
-                    label: t.saved),
-              ]
-          ),
-          tabBuilder: (context, index) {
-            if (index == 0) {
-              return CupertinoTabView(
-                navigatorKey: firstTabNavKey,
-                builder: (BuildContext context) => RecordPage(),
-              );
-            } else {
-              return CupertinoTabView(
-                navigatorKey: secondTabNavKey,
-                builder: (BuildContext context) => SavedPage(),
-              );
-            }
-          });
-
-    } else {*/
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.indigo,
-          title: Text(widget.title),
-          automaticallyImplyLeading: false,
-          bottom: TabBar(
-              indicatorColor: Colors.white,
-              physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
-              tabs: [
-                Tab(text: t.record, icon: const Icon(Icons.album_outlined)),
-                Tab(text: t.saved, icon: const Icon(Icons.save)),
-              ]),
-        ),
-        body: TabBarView(
-          physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics()),
-          children: [
-            RecordPage(),
-            const SavedPage(),
-          ],
-        ),
-      );
-   // }
-
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        automaticallyImplyLeading: false,
+        bottom: TabBar(
+            indicatorColor: Colors.white,
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
+            tabs: [
+              Tab(text: t.record, icon: const Icon(Icons.album_outlined)),
+              Tab(text: t.saved, icon: const Icon(Icons.save)),
+            ]),
+      ),
+      body: const TabBarView(
+        physics: BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics()),
+        children: [
+          RecordPage(),
+          SavedPage(),
+        ],
+      ),
+    );
   }
 }

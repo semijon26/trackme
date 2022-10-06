@@ -87,7 +87,7 @@ class LineChartWidget extends StatelessWidget {
                     );
                     return LineTooltipItem(
                         '${t.distance}: ${touchedSpot.x.round()} m'
-                            '\n${t.altitude}: ${touchedSpot.y.round()} m',
+                        '\n${t.altitude}: ${touchedSpot.y.round()} m',
                         textStyle);
                   }).toList();
                 }))));

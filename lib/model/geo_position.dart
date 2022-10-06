@@ -1,11 +1,9 @@
-
 import 'package:hive_flutter/hive_flutter.dart';
 
 part 'geo_position.g.dart';
 
 @HiveType(typeId: 2)
 class GeoPosition extends HiveObject {
-
   @HiveField(0)
   double? _latitude;
 
@@ -21,10 +19,10 @@ class GeoPosition extends HiveObject {
   @HiveField(4)
   DateTime? _timestamp;
 
-
   GeoPosition();
 
-  GeoPosition.fromPosition(double latitude, double longitude, double speed, DateTime? timestamp, double altitude) {
+  GeoPosition.fromPosition(double latitude, double longitude, double speed,
+      DateTime? timestamp, double altitude) {
     _latitude = latitude;
     _longitude = longitude;
     _speed = speed;

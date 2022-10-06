@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:personal_tracking_app/model/geo_position.dart';
 import 'package:personal_tracking_app/model/track.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Recorder {
   bool isRecording = false;
@@ -33,23 +31,25 @@ class Recorder {
         accuracy: LocationAccuracy.best,
         distanceFilter: 5,
         foregroundNotificationConfig: ForegroundNotificationConfig(
-            //notificationTitle: t.runningInBackground,
-            //notificationText: t.trackMeWillContinueReceiveLocation,
-            notificationTitle: "Die App läuft im Hintergrund weiter",
-            notificationText: "TrackMe wird weiterhin deine Position ermitteln, auch wenn die App im Hintergrund ist",
-          enableWakeLock: true,),
+          //notificationTitle: t.runningInBackground,
+          //notificationText: t.trackMeWillContinueReceiveLocation,
+          notificationTitle: "Die App läuft im Hintergrund weiter",
+          notificationText:
+              "TrackMe wird weiterhin deine Position ermitteln, auch wenn die App im Hintergrund ist",
+          enableWakeLock: true,
+        ),
       );
-    } else if (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS) {
+    } else if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
       return AppleSettings(
-        accuracy: LocationAccuracy.best,
-        activityType: ActivityType.fitness,
-        distanceFilter: 5,
-        pauseLocationUpdatesAutomatically: false,
-        showBackgroundLocationIndicator: true);
+          accuracy: LocationAccuracy.best,
+          activityType: ActivityType.fitness,
+          distanceFilter: 5,
+          pauseLocationUpdatesAutomatically: false,
+          showBackgroundLocationIndicator: true);
     } else {
       return const LocationSettings(
-        accuracy: LocationAccuracy.best,
-        distanceFilter: 5);
+          accuracy: LocationAccuracy.best, distanceFilter: 5);
     }
   }
 
@@ -85,12 +85,12 @@ class Recorder {
       _timestamp = pos.timestamp;
       if (kDebugMode) {
         print(pos.latitude.toString() +
-          ' - ' +
-          pos.longitude.toString() +
-          ' - ' +
-          pos.speed.toString() +
-          ' - ' +
-          pos.altitude.toString());
+            ' - ' +
+            pos.longitude.toString() +
+            ' - ' +
+            pos.speed.toString() +
+            ' - ' +
+            pos.altitude.toString());
       }
       track?.startTime ??= pos.timestamp;
       GeoPosition newPos = GeoPosition.fromPosition(

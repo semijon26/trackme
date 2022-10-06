@@ -9,7 +9,6 @@ part 'track.g.dart';
 
 @HiveType(typeId: 1)
 class Track extends HiveObject {
-
   @HiveField(0)
   DateTime? startTime;
 
@@ -42,17 +41,16 @@ class Track extends HiveObject {
   @HiveField(9)
   String? name;
 
-  bool isValidTrack () {
+  bool isValidTrack() {
     if (positions.isNotEmpty) {
       return true;
     }
     return false;
   }
 
-
   Future<bool> removeWithPhotos() async {
     try {
-      for(String photoPath in photos) {
+      for (String photoPath in photos) {
         removePhoto(photoPath);
         await File(photoPath).delete();
       }
@@ -146,11 +144,13 @@ class Track extends HiveObject {
       GeoPosition pos1 = _positions.elementAt(i);
       if (pos1.latitude != null && pos1.longitude != null) {
         GeoPosition pos2;
-        if (_positions.length > _positions.indexOf(pos1)+1) {
-          pos2 = _positions.elementAt(_positions.indexOf(pos1)+1);
+        if (_positions.length > _positions.indexOf(pos1) + 1) {
+          pos2 = _positions.elementAt(_positions.indexOf(pos1) + 1);
           if (pos2.latitude != null && pos2.longitude != null) {
-            totalDist = totalDist + Geolocator.distanceBetween(pos1.latitude!, pos1.longitude!, pos2.latitude!, pos2.longitude!);
-          }else {
+            totalDist = totalDist +
+                Geolocator.distanceBetween(pos1.latitude!, pos1.longitude!,
+                    pos2.latitude!, pos2.longitude!);
+          } else {
             return -1;
           }
         }
@@ -166,11 +166,13 @@ class Track extends HiveObject {
     for (GeoPosition pos1 in _positions) {
       if (pos1.latitude != null && pos1.longitude != null) {
         GeoPosition pos2;
-        if (_positions.length > _positions.indexOf(pos1)+1) {
-          pos2 = _positions.elementAt(_positions.indexOf(pos1)+1);
+        if (_positions.length > _positions.indexOf(pos1) + 1) {
+          pos2 = _positions.elementAt(_positions.indexOf(pos1) + 1);
           if (pos2.latitude != null && pos2.longitude != null) {
-            totalDist = totalDist + Geolocator.distanceBetween(pos1.latitude!, pos1.longitude!, pos2.latitude!, pos2.longitude!);
-          }else {
+            totalDist = totalDist +
+                Geolocator.distanceBetween(pos1.latitude!, pos1.longitude!,
+                    pos2.latitude!, pos2.longitude!);
+          } else {
             return -1;
           }
         }
@@ -198,5 +200,4 @@ class Track extends HiveObject {
   String toString() {
     return 'Track{_startTime: $startTime, _endTime: $endTime, poslist}';
   }
-
 }

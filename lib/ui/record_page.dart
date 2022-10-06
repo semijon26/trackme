@@ -8,10 +8,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../recorder.dart';
-import '../value_format.dart';
+import '../utils/value_format.dart';
 
 class RecordPage extends StatefulWidget {
-  RecordPage({Key? key}) : super(key: key);
+  const RecordPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -19,10 +19,8 @@ class RecordPage extends StatefulWidget {
   }
 }
 
-
 class _RecordPageState extends State<RecordPage>
     with AutomaticKeepAliveClientMixin<RecordPage> {
-  //late Recorder recorder;
   Recorder recorder = Recorder();
   DateTime? _startButtonTimestamp;
   late Timer _timer;
@@ -32,7 +30,6 @@ class _RecordPageState extends State<RecordPage>
 
   @override
   void initState() {
-    //recorder = Recorder(context);
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       setState(() {});
     });
@@ -47,7 +44,6 @@ class _RecordPageState extends State<RecordPage>
     controller.dispose();
     super.dispose();
   }
-
 
   void _switchRecordingStatus() {
     setState(() {
@@ -77,17 +73,18 @@ class _RecordPageState extends State<RecordPage>
           _isRecording = recorder.isRecording;
           Navigator.of(context, rootNavigator: true).pop();
           if (isSuccessful!) {
-              var name = await _enterNameDialog();
-              if (name == "") {
-                name = null;
-              }
-              name != null ? recorder.track?.name = name
-                  : recorder.track?.name = t.unnamedTrack;
-              recorder.track?.save();
-              Fluttertoast.showToast(
-                  msg: t.savedToastMsg,
-                  backgroundColor: Colors.grey.shade200,
-                  textColor: Colors.indigo);
+            var name = await _enterNameDialog();
+            if (name == "") {
+              name = null;
+            }
+            name != null
+                ? recorder.track?.name = name
+                : recorder.track?.name = t.unnamedTrack;
+            recorder.track?.save();
+            Fluttertoast.showToast(
+                msg: t.savedToastMsg,
+                backgroundColor: Colors.grey.shade200,
+                textColor: Colors.indigo);
           } else {
             Fluttertoast.showToast(
                 msg: t.notSavedToastMsg,
@@ -140,137 +137,138 @@ class _RecordPageState extends State<RecordPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var t = AppLocalizations.of(context)!;
     return Center(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Center(
             child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(
+              height: 220,
+              width: 300,
+              child: Card(
+                margin: const EdgeInsets.only(bottom: 20),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _isRecording
+                            ? recorder.latitude
+                                .toString()
+                                .characters
+                                .take(12)
+                                .string
+                            : '--',
+                        style: const TextStyle(
+                            fontSize: 30,
+                            color: Color.fromRGBO(132, 128, 0, 100)),
+                      ),
+                      Text(t.latitude),
+                      const Text(''),
+                      Text(
+                        _isRecording
+                            ? recorder.longitude
+                                .toString()
+                                .characters
+                                .take(12)
+                                .string
+                            : '--',
+                        style: const TextStyle(
+                            fontSize: 30,
+                            color: Color.fromRGBO(132, 128, 0, 100)),
+                      ),
+                      Text(t.longitude),
+                      const Text(''),
+                      Text(
+                        _isRecording
+                            ? ValueFormat().formatAltitude(recorder.altitude)
+                            : '--',
+                        style: const TextStyle(
+                            fontSize: 24,
+                            color: Color.fromRGBO(132, 128, 0, 100)),
+                      ),
+                      Text(t.altitude),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+              children: [
                 SizedBox(
-                  height: 220,
-                  width: 300,
+                  height: 90,
+                  width: 150,
                   child: Card(
-                    margin: const EdgeInsets.only(bottom: 20),
+                    margin: const EdgeInsets.only(right: 15, bottom: 20),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            _isRecording ? recorder.latitude.toString().characters.take(12).string : '--',
+                            _isRecording ? _getRecordingTime() : '--',
                             style: const TextStyle(
-                                fontSize: 30,
-                                color: Color.fromRGBO(132, 128, 0, 100)),
+                                fontSize: 24, color: Colors.indigo),
                           ),
-                          Text(t.latitude),
-                          const Text(''),
-                          Text(
-                            _isRecording ? recorder.longitude.toString().characters.take(12).string : '--',
-                            style: const TextStyle(
-                                fontSize: 30,
-                                color: Color.fromRGBO(132, 128, 0, 100)),
-                          ),
-                          Text(t.longitude),
-                          const Text(''),
-                          Text(
-                            _isRecording
-                                ? ValueFormat().formatAltitude(recorder.altitude)
-                                : '--',
-                            style: const TextStyle(
-                                fontSize: 24,
-                                color: Color.fromRGBO(132, 128, 0, 100)),
-                          ),
-                          Text(t.altitude),
+                          Text(t.recordingTime),
                         ],
                       ),
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 90,
-                      width: 150,
-                      child: Card(
-                        margin: const EdgeInsets.only(right: 15, bottom: 20),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                _isRecording ? _getRecordingTime() : '--',
-                                style: const TextStyle(
-                                    fontSize: 24, color: Colors.indigo),
-                              ),
-                              Text(t.recordingTime),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 90,
-                      width: 150,
-                      child: Card(
-                        margin: const EdgeInsets.only(left: 15, bottom: 20),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                _isRecording
-                                    ? ValueFormat()
+                SizedBox(
+                  height: 90,
+                  width: 150,
+                  child: Card(
+                    margin: const EdgeInsets.only(left: 15, bottom: 20),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _isRecording
+                                ? ValueFormat()
                                     .formatAndCheckSpeedValue(recorder.speed)
-                                    : '--',
-                                style: const TextStyle(
-                                    fontSize: 24, color: Colors.indigo),
-                              ),
-                              Text(t.speed),
-                            ],
+                                : '--',
+                            style: const TextStyle(
+                                fontSize: 24, color: Colors.indigo),
                           ),
-                        ),
+                          Text(t.speed),
+                        ],
                       ),
-                    )
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: const Size(300, 120),
-                      primary: _getStartStopButtonColor(),
                     ),
-                    onPressed: _switchRecordingStatus,
-                    child: _getStartStopButtonIcon(),
                   ),
-                ),
-                ElevatedButton(
-                    style: _getPhotoButtonStyle(),
-                    onPressed: _isRecording ? _takePhoto : () {},
-                    child: const Icon(
-                      Icons.add_a_photo,
-                      color: Colors.white,
-                      size: 30,
-                    )),
+                )
               ],
-            )
-        ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  fixedSize: const Size(300, 120), backgroundColor: _getStartStopButtonColor(),
+                ),
+                onPressed: _switchRecordingStatus,
+                child: _getStartStopButtonIcon(),
+              ),
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(300, 70),
+                    backgroundColor: const Color.fromRGBO(132, 128, 0, 100)),
+                onPressed: _isRecording ? _takePhoto : null,
+                child: const Icon(
+                  Icons.add_a_photo,
+                  color: Colors.white,
+                  size: 30,
+                )),
+          ],
+        )),
       ),
     );
-  }
-
-  ButtonStyle _getPhotoButtonStyle() {
-    if (_isRecording) {
-      return ElevatedButton.styleFrom(
-          fixedSize: const Size(300, 70),
-          primary: const Color.fromRGBO(132, 128, 0, 100));
-    }
-    return ElevatedButton.styleFrom(
-        splashFactory: NoSplash.splashFactory,
-        fixedSize: const Size(300, 70),
-        primary: Colors.black12.withOpacity(.01));
   }
 
   Color _getStartStopButtonColor() {
@@ -293,7 +291,7 @@ class _RecordPageState extends State<RecordPage>
 
     var path = await getApplicationDocumentsDirectory();
     var directory =
-    await Directory('${path.path}/photos').create(recursive: true);
+        await Directory('${path.path}/photos').create(recursive: true);
     _fullPath = "${directory.path}/${image.name}";
     final imageTemporary = File(image.path);
     await imageTemporary.copy(_fullPath);

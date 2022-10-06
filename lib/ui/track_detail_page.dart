@@ -9,9 +9,9 @@ import 'package:personal_tracking_app/ui/photo_fullscreen.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../gpx_export.dart';
+import '../utils/gpx_export.dart';
 import '../model/track.dart';
-import '../value_format.dart';
+import '../utils/value_format.dart';
 
 class TrackDetailPage extends StatefulWidget {
   final Track track;
@@ -25,7 +25,6 @@ class TrackDetailPage extends StatefulWidget {
 }
 
 class _TrackDetailPageState extends State<TrackDetailPage> {
-
   late TextEditingController controller;
 
   @override
@@ -56,8 +55,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
     if (name == "") {
       name = null;
     }
-    name != null ? track.name = name
-        : track.name = track.name;
+    name != null ? track.name = name : track.name = track.name;
     track.save();
     setState(() => {});
   }
@@ -76,7 +74,8 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
         title: Text(t.submitNewTrackName),
         content: TextField(
           autofocus: true,
-          decoration: InputDecoration(hintText: track.name != null ? track.name! : t.unknown),
+          decoration: InputDecoration(
+              hintText: track.name != null ? track.name! : t.unknown),
           controller: controller,
           onSubmitted: (_) => submit(),
         ),
@@ -98,7 +97,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.indigo,
+          backgroundColor: Colors.indigo,
           actions: [
             IconButton(
                 onPressed: () => _changeName(track),
@@ -107,8 +106,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
                 onPressed: () => _shareTrack(context, track),
                 icon: const Icon(Icons.ios_share))
           ],
-          title: Text(track.name != null ? track.name! : t.unknown)
-      ),
+          title: Text(track.name != null ? track.name! : t.unknown)),
       body: Scrollbar(
         interactive: true,
         radius: const Radius.circular(2),
@@ -120,7 +118,7 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
               height: googleMapHeight,
               child: GoogleMapWidget(track, googleMapHeight),
             ),
-            if(track.photos.isNotEmpty) ...[
+            if (track.photos.isNotEmpty) ...[
               Padding(
                 padding: const EdgeInsets.only(top: 20, bottom: 5),
                 child: Text(t.photos,
@@ -146,10 +144,10 @@ class _TrackDetailPageState extends State<TrackDetailPage> {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        PhotoFullscreen(widget.track, photo)))
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PhotoFullscreen(
+                                            widget.track, photo)))
                                 .then((value) => setState(() {}));
                           },
                           child: Image.file(

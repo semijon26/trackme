@@ -6,7 +6,7 @@ import 'package:personal_tracking_app/ui/track_detail_page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../model/track.dart';
-import '../value_format.dart';
+import '../utils/value_format.dart';
 
 class SavedPage extends StatefulWidget {
   const SavedPage({Key? key}) : super(key: key);
@@ -56,112 +56,111 @@ class _SavedPageState extends State<SavedPage>
         valueListenable: Hive.box('tracks').listenable(),
         builder: (BuildContext context, Box tracks, Widget? child) {
           return ListView.builder(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
             itemCount: tracks.length,
             itemBuilder: (context, index) {
-              final track = tracks.getAt(index) as Track;
+              final track = tracks.getAt(tracks.length - 1 - index);
               return Card(
                   child: Slidable(
-                    closeOnScroll: true,
-                    dragStartBehavior: DragStartBehavior.start,
-                    endActionPane: ActionPane(
-                      extentRatio: .35,
-                      motion: const DrawerMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: (context) => _showAlertDialog(track),
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: t.delete,
-                        ),
-                      ],
+                closeOnScroll: true,
+                dragStartBehavior: DragStartBehavior.start,
+                endActionPane: ActionPane(
+                  extentRatio: .35,
+                  motion: const DrawerMotion(),
+                  children: [
+                    SlidableAction(
+                      onPressed: (context) => _showAlertDialog(track),
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                      icon: Icons.delete,
+                      label: t.delete,
                     ),
-                    child: ListTile(
-                      isThreeLine: true,
-                      title: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          track.name != null ? track.name! : t.unknown,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
-                        ),
-                      ),
-                      minVerticalPadding: 0,
-                      contentPadding: const EdgeInsets.only(
-                          left: 16, right: 16, top: 7, bottom: 7),
-                      subtitle: Column(
+                  ],
+                ),
+                child: ListTile(
+                  isThreeLine: true,
+                  title: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      track.name != null ? track.name! : t.unknown,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                  ),
+                  minVerticalPadding: 0,
+                  contentPadding: const EdgeInsets.only(
+                      left: 16, right: 16, top: 7, bottom: 7),
+                  subtitle: Column(children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(track.startTime!= null ? "${t.from} ${ValueFormat().dateFormatter.format(track.startTime!)}" : t.unknown),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 35),
-                                child: Column(
-                                  children: [
-                                    const Icon(Icons.play_arrow_outlined),
-                                    Text(track.startTime != null
-                                        ? ValueFormat()
-                                        .timeFormatter
-                                        .format(track.startTime!.toLocal())
-                                        : t.unknown),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 35),
-                                child: Column(
-                                  children: [
-                                    const Icon(Icons.stop_outlined),
-                                    Text(track.endTime != null
-                                        ? ValueFormat()
-                                        .timeFormatter
-                                        .format(track.endTime!.toLocal())
-                                        : t.unknown),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 35),
-                                child: Column(
-                                  children: [
-                                    const Icon(Icons.route_outlined),
-                                    Text(track.totalDistance != -1
-                                        ? ValueFormat().formatDistance(track.totalDistance)
-                                        : t.unknown)
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                children: [
-                                  const Icon(Icons.speed),
-                                  Text(ValueFormat().formatAndCheckSpeedValue(track.avgSpeed)),
-                                ],
-                              ),
-                            ],
-                          ),
+                          Text(track.startTime != null
+                              ? "${t.from} ${ValueFormat().dateFormatter.format(track.startTime!)}"
+                              : t.unknown),
                         ],
                       ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TrackDetailPage(track)));
-                      },
                     ),
-                  ));
+                    Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 35),
+                        child: Column(
+                          children: [
+                            const Icon(Icons.play_arrow_outlined),
+                            Text(track.startTime != null
+                                ? ValueFormat()
+                                    .timeFormatter
+                                    .format(track.startTime!.toLocal())
+                                : t.unknown),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 35),
+                        child: Column(
+                          children: [
+                            const Icon(Icons.stop_outlined),
+                            Text(track.endTime != null
+                                ? ValueFormat()
+                                    .timeFormatter
+                                    .format(track.endTime!.toLocal())
+                                : t.unknown),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 35),
+                        child: Column(
+                          children: [
+                            const Icon(Icons.route_outlined),
+                            Text(track.totalDistance != -1
+                                ? ValueFormat()
+                                    .formatDistance(track.totalDistance)
+                                : t.unknown)
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          const Icon(Icons.speed),
+                          Text(ValueFormat()
+                              .formatAndCheckSpeedValue(track.avgSpeed)),
+                        ],
+                      )
+                    ])
+                  ]),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TrackDetailPage(track)));
+                  },
+                ),
+              ));
             },
           );
-    });
+        });
   }
 }

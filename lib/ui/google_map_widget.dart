@@ -8,7 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../model/geo_position.dart';
 import '../model/track.dart';
-import '../value_format.dart';
+import '../utils/value_format.dart';
 
 class GoogleMapWidget extends StatefulWidget {
   final Track track;
@@ -218,7 +218,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
+        body: GoogleMap(
           gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
             Factory<OneSequenceGestureRecognizer>(
               () => EagerGestureRecognizer(),
@@ -232,29 +232,26 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
           initialCameraPosition: _getCameraPosition(),
           mapType: _mapType,
         ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(top: 10),
-        width: 50,
-        height: 50,
-        child: FloatingActionButton(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.indigo,
-            child: const Icon(Icons.map),
-            onPressed: () {
-              setState(() {
-                if (_mapType == MapType.normal) {
-                  _mapType = MapType.hybrid;
-                } else if (_mapType == MapType.hybrid) {
-                  _mapType = MapType.satellite;
-                } else {
-                  _mapType = MapType.normal;
-                }
-              });
-            }
-        ),
-      )
-
-    );
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+        floatingActionButton: Container(
+          margin: const EdgeInsets.only(top: 10),
+          width: 50,
+          height: 50,
+          child: FloatingActionButton(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.indigo,
+              child: const Icon(Icons.map),
+              onPressed: () {
+                setState(() {
+                  if (_mapType == MapType.normal) {
+                    _mapType = MapType.hybrid;
+                  } else if (_mapType == MapType.hybrid) {
+                    _mapType = MapType.satellite;
+                  } else {
+                    _mapType = MapType.normal;
+                  }
+                });
+              }),
+        ));
   }
 }
