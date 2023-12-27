@@ -1,19 +1,3 @@
-# personal_tracking_app
+# TrackMe
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-Link to Figma:
-https://www.figma.com/file/pGUWV7LrzjG9x9xDaphH54/Personal-Tracking-App?node-id=0%3A1
+Introducing TrackMe, a cross-platform app developed using Flutter for iOS and Android, designed to enhance your journey tracking experience. Whether you're hiking through scenic trails or embarking on exhilarating bike tours, TrackMe allows you to effortlessly record your routes. Capture and store images along your journey, adding a personal touch to your travel memories. After your adventure, delve into detailed insights of your journey with TrackMe. Explore comprehensive route details, including an elevation diagram showcasing your altitude variations over sea level at different times. Plus, access key metrics like average speed, duration, and more. TrackMe is your perfect companion for capturing and reliving every step of your adventures!
